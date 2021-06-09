@@ -6,6 +6,8 @@ Feel free to add ideas to the To-do List!
 ### To-do List
 
 - [ ] Raw Plot
+  - [ ] Single Channel Display
+  - [ ] Stacked/Multi-channel Display
 - [ ] Spectrogram
 - [ ] Read in data real-time from muse headset
 - [ ] Convert to library?
