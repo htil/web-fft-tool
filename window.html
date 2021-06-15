@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<h1>EEG Raw Plot</h1>
+<p>You can click and drag to zoom in on selected parts of the data. Double click to reset.</p>
+<body>
+	<br>
+	Select Channel: 
+	<select id="dropdown"></select>
+	<br>
+	Set initial window width:
+	<input type="number" value="100" id="window_width">
+	<button>Enter</button>
+</body>
+
+
+<h2 id="title">Channel Name</h2>
+
+<div id="line_plot1"></div>
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="window.js"></script>
