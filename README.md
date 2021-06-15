@@ -9,7 +9,7 @@ Feel free to add ideas to the To-do List!
   - [x] Single Channel Display
   - [ ] Stacked/Multi-channel Display
 - [x] Add sliding window
-- [ ] Extract raw data from sliding window
+- [x] Extract raw data from sliding window
 - [ ] Calculate FFT from window
 - [ ] Output result of FFT/bandpower
 - [ ] Convert to library?
