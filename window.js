@@ -98,10 +98,11 @@ function draw(d, id){
     .attr("x", 0)
     .attr("y", 0);
 	
+    var idx;
 	// Add brushing
   var brush = d3.brushX()                
 	.extent( [ [0,0], [width,height] ] )  
-	.on("end", updateChart)
+	.on("end", brushed)
 
   // Create the line variable for the line brush
   var line = svg.append('g')
@@ -125,49 +126,45 @@ function draw(d, id){
       .attr("class", "brush")
       .call(brush)
 			.call(brush.move, [0,100]);
-		
-
-		d3.select("button").on("click", function() {
-				var selectedOption = d3.select("#window_width").property("value");
-				//alert(selectedOption);
-				//line
-				//.call(brush)
-				//.call(brush.move, [0,selectedOption]);
-			});  
 
   // A function that update the chart for given boundaries
-  function updateChart() {
+  function brushed() {
+    // Get window area
+		var extent = d3.event.selection;
 
-    // Get selected area
-    //var extent = d3.event.selection
-		//var start_idx = extent[0];
-		//var end_idx = extent[1];
+    // Calculate exact time range of window
+		//var rangeExtent = [x( extent[0] ), x( extent[1] ) ]; //convert
+		//var rangeWidth  = rangeExtent[1] - rangeExtent[0];
 
-		var extent = d3.event.selection; //returns [xMin, xMax]
-		var rangeExtent = [x( extent[0] ), x( extent[1] ) ]; //convert
-		var rangeWidth  = rangeExtent[1] - rangeExtent[0];
-
-    //console.log(`start: ${start_idx} end_idx: ${end_idx}`);
-		console.log(`width: ${rangeExtent}`);
-		console.log(data);
-
+    // Get lower/upper bounds of the window (time)
 		var time_range = extent.map(x.invert, x);
-		var amplitudes_range = extent.map(y.invert, y);
-		console.log(time_range);
-		console.log(amplitudes_range);
 		
-		//var t = data.time.find(time[0]);
-		//console.log(`start idx: ${t}`);
-		let dataT = data.map(a => a.time);
-		let dataA = data.map(a => a.amplitude);
+    // Parse out the time data from the original dataset
+		let tData = data.map(a => a.time);
 
-		let Tidx= [dataT.indexOf(time_range[0]), dataT.indexOf(time_range[1])];
-		console.log(Tidx);
+    // Calulate the upper and lower indexes of original dataset
+		var lower = findClosestIdx(time_range[0], tData);
+    var upper = findClosestIdx(time_range[1], tData);
+		//console.log(`lower: ${lower} upper: ${upper}`);
 
-		console.log(d3.event.data);
+    // Slice out the original data based on the window selection
+    var windowData = data.slice(lower, upper+1);
+    console.log(windowData);
+    // TODO: Add code for calculation FFTs, Bandpower, Visualizations, etc using the windowData...
+    
   }  
 };
 
+function findClosestIdx(val, arr)
+{
+  var closest = arr.reduce(function(prev, curr) {
+    return (Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev);
+  });
+
+  let idx= arr.indexOf(closest);
+
+  return idx;
+}
 
 
 function updateDropdown(channelNames)
