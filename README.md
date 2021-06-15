@@ -6,10 +6,12 @@ Feel free to add ideas to the To-do List!
 ### To-do List
 
 - [ ] Raw Plot
-  - [ ] Single Channel Display
+  - [x] Single Channel Display
   - [ ] Stacked/Multi-channel Display
-- [ ] Spectrogram
-- [ ] Read in data real-time from muse headset
+- [x] Add sliding window
+- [ ] Extract raw data from sliding window
+- [ ] Calculate FFT from window
+- [ ] Output result of FFT/bandpower
 - [ ] Convert to library?
 - [ ] Come up with a cooler name for the repo :sunglasses:
 
