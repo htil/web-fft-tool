@@ -8,28 +8,28 @@ function getChannelData(channel, data)
   let t =0;
   for(let i=0; i<d.length; i++)
   {
-      result.push({
-          amplitude: d[i],
-          time: t
-      });
-      t+= 1/freq;
+    result.push({
+      amplitude: d[i],
+      time: t
+    });
+    t+= 1/freq;r
   }
   return result;
 };
 
 function getEEGData(channelNames, data)
 {
-    let d = [];
-    for(let i=0; i<channelNames.length; i++)
-    {
-        let channelData = getChannelData(channelNames[i], data);
-        //console.log(channelNames[i]);
-        //console.log(channelData);
-        d.push({channel: channelNames[i],
-                value: channelData,
-        });
-    }
-    return d;
+  let d = [];
+  for(let i=0; i<channelNames.length; i++)
+  {
+    let channelData = getChannelData(channelNames[i], data);
+    //console.log(channelNames[i]);
+    //console.log(channelData);
+    d.push({channel: channelNames[i],
+            value: channelData,
+    });
+  }
+  return d;
 };
 
 function draw(d, id){
@@ -117,7 +117,7 @@ function draw(d, id){
     .attr("d", d3.line()
       .x(function(d) { return x(d.time) })
       .y(function(d) { return y(d.amplitude) })
-      )
+    )
 
   // Add the brushing
   line
@@ -173,12 +173,12 @@ function draw(d, id){
 
 function updateDropdown(channelNames)
 {
-	var i=0;
-	d3.select("#dropdown")
+  var i=0;
+  d3.select("#dropdown")
       .selectAll('myOptions')
-     	.data(channelNames)
+      .data(channelNames)
       .enter()
-    	.append('option')
+      .append('option')
       .text(function (d) { return d; }) // text showed in the menu
       .attr("value", function () { return i++; }) // corresponding value
 };
@@ -188,7 +188,6 @@ function drawRawFromFile(file, id)
 {
   d3.csv(file, 
     function(data) {
-
       // Parse out channel names
       var channelNames = d3.keys(data[0]);
 

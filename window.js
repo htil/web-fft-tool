@@ -8,28 +8,28 @@ function getChannelData(channel, data)
   let t =0;
   for(let i=0; i<d.length; i++)
   {
-      result.push({
-          amplitude: d[i],
-          time: t
-      });
-      t+= 1/freq;
+    result.push({
+      amplitude: d[i],
+      time: t
+    });
+    t+= 1/freq;
   }
   return result;
 };
 
 function getEEGData(channelNames, data)
 {
-    let d = [];
-    for(let i=0; i<channelNames.length; i++)
-    {
-        let channelData = getChannelData(channelNames[i], data);
-        //console.log(channelNames[i]);
-        //console.log(channelData);
-        d.push({channel: channelNames[i],
-                value: channelData,
-        });
-    }
-    return d;
+  let d = [];
+  for(let i=0; i<channelNames.length; i++)
+  {
+    let channelData = getChannelData(channelNames[i], data);
+    //console.log(channelNames[i]);
+    //console.log(channelData);
+    d.push({channel: channelNames[i],
+            value: channelData,
+    });
+  }
+  return d;
 };
 
 function draw(d, id){
@@ -97,12 +97,12 @@ function draw(d, id){
     .attr("height", height )
     .attr("x", 0)
     .attr("y", 0);
-	
+  
     var idx;
-	// Add brushing
+  // Add brushing
   var brush = d3.brushX()                
-	.extent( [ [0,0], [width,height] ] )  
-	.on("end", brushed)
+  .extent( [ [0,0], [width,height] ] )  
+  .on("end", brushed)
 
   // Create the line variable for the line brush
   var line = svg.append('g')
@@ -118,34 +118,34 @@ function draw(d, id){
     .attr("d", d3.line()
       .x(function(d) { return x(d.time) })
       .y(function(d) { return y(d.amplitude) })
-      )
+    )
 
   // Add the brushing
  line
     .append("g")
       .attr("class", "brush")
       .call(brush)
-			.call(brush.move, [0,100]);
+      .call(brush.move, [0,100]);
 
   // A function that update the chart for given boundaries
   function brushed() {
     // Get window area
-		var extent = d3.event.selection;
+    var extent = d3.event.selection;
 
     // Calculate exact time range of window
-		//var rangeExtent = [x( extent[0] ), x( extent[1] ) ]; //convert
-		//var rangeWidth  = rangeExtent[1] - rangeExtent[0];
+    //var rangeExtent = [x( extent[0] ), x( extent[1] ) ]; //convert
+    //var rangeWidth  = rangeExtent[1] - rangeExtent[0];
 
     // Get lower/upper bounds of the window (time)
-		var time_range = extent.map(x.invert, x);
-		
+    var time_range = extent.map(x.invert, x);
+    
     // Parse out the time data from the original dataset
-		let tData = data.map(a => a.time);
+    let tData = data.map(a => a.time);
 
     // Calulate the upper and lower indexes of original dataset
-		var lower = findClosestIdx(time_range[0], tData);
+    var lower = findClosestIdx(time_range[0], tData);
     var upper = findClosestIdx(time_range[1], tData);
-		//console.log(`lower: ${lower} upper: ${upper}`);
+    //console.log(`lower: ${lower} upper: ${upper}`);
 
     // Slice out the original data based on the window selection
     var windowData = data.slice(lower, upper+1);
@@ -169,14 +169,14 @@ function findClosestIdx(val, arr)
 
 function updateDropdown(channelNames)
 {
-	var i=0;
-	d3.select("#dropdown")
-      .selectAll('myOptions')
-     	.data(channelNames)
-      .enter()
-    	.append('option')
-      .text(function (d) { return d; }) // text showed in the menu
-      .attr("value", function () { return i++; }) // corresponding value
+  var i=0;
+  d3.select("#dropdown")
+    .selectAll('myOptions')
+    .data(channelNames)
+    .enter()
+    .append('option')
+    .text(function (d) { return d; }) // text showed in the menu
+    .attr("value", function () { return i++; }) // corresponding value
 };
 
 
@@ -184,7 +184,6 @@ function drawRawFromFile(file, id)
 {
   d3.csv(file, 
     function(data) {
-
       // Parse out channel names
       var channelNames = d3.keys(data[0]);
 
@@ -206,12 +205,6 @@ function drawRawFromFile(file, id)
         d3.select("svg").remove();
         draw(allData[selectedOption], id);
       });
-
-
-
-			
-
-
   });
 };
 
