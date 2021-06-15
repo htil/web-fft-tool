@@ -98,7 +98,7 @@ function draw(d, id){
     .attr("x", 0)
     .attr("y", 0);
   
-    var idx;
+
   // Add brushing
   var brush = d3.brushX()                
   .extent( [ [0,0], [width,height] ] )  
@@ -126,6 +126,7 @@ function draw(d, id){
       .attr("class", "brush")
       .call(brush)
       .call(brush.move, [0,100]);
+    // TODO: add functionality to change the brush width based on inputing the number of seconds
 
   // A function that update the chart for given boundaries
   function brushed() {
@@ -150,6 +151,7 @@ function draw(d, id){
     // Slice out the original data based on the window selection
     var windowData = data.slice(lower, upper+1);
     console.log(windowData);
+
     // TODO: Add code for calculation FFTs, Bandpower, Visualizations, etc using the windowData...
     
   }  
