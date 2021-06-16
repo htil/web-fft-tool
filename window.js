@@ -1,8 +1,5 @@
-function getChannelData(channel, data)
+function getChannelData(channel, data, freq)
 {
-  // Sampling Rate
-  const freq = 512; // Hz
-
   let d = data.map(a => a[channel]).map(Number);
   let result = [];
   let t =0;
@@ -17,12 +14,12 @@ function getChannelData(channel, data)
   return result;
 };
 
-function getEEGData(channelNames, data)
+function getEEGData(channelNames, data, freq)
 {
   let d = [];
   for(let i=0; i<channelNames.length; i++)
   {
-    let channelData = getChannelData(channelNames[i], data);
+    let channelData = getChannelData(channelNames[i], data, freq);
     //console.log(channelNames[i]);
     //console.log(channelData);
     d.push({channel: channelNames[i],
@@ -119,7 +116,9 @@ function draw(d, id){
 		var start = d3.select("#window_start").property("value");
 		var end = d3.select("#window_end").property("value");
 
-		if(start > end){
+		if(!isNumber(start) || !isNumber(end)){
+			alert(`Error: ${!isNumber(start) ? "Starting input" : "Ending input"} is not a valid number.`);
+		} else if(start > end){
 			alert(`Error: Incorrect window range. Start time cannot be greater than end time.`);
 		} else if (end < start){
 			alert(`Error: Incorrect window range. End time cannot be less than start time.`);
@@ -138,11 +137,6 @@ function draw(d, id){
   function brushed() {
     // Get window area
     var extent = d3.event.selection;
-
-    // Calculate exact time range of window
-    var rangeExtent = [x( extent[0] ), x( extent[1] ) ]; //convert
-    var rangeWidth  = rangeExtent[1] - rangeExtent[0];
-
 
     // Get lower/upper bounds of the window (time)
     var time_range = extent.map(x.invert, x);
@@ -175,6 +169,12 @@ function draw(d, id){
     
   }  
 };
+
+function isNumber(num)
+{
+	var reg = /^-?\d+\.?\d*$/
+	return reg.test(num);
+}
 
 function findClosestIdx(val, arr)
 {
@@ -212,7 +212,7 @@ function drawRawFromFile(file, id)
       updateDropdown(channelNames)
 
       // Get the EEG Data from the .csv file
-      var allData = getEEGData(channelNames, data);
+      var allData = getEEGData(channelNames, data, 512);
 
       // Plot the first channel's data
       draw(allData[0], id);
