@@ -7,12 +7,30 @@
   <br>
   Select Channel: 
   <select id="dropdown"></select>
+	<br>
+	Move window to time range (sec): 
+	<input type=number id="window_start" value="0">
+	to
+	<input type=number id="window_end" value="10">
+	<button id="window_button">Enter</button>
 </body>
 
+<table cellpadding="15">
+	<tr>
+		<td>
+			<h2 id="title">Channel Name</h2>
+			<div id="line_plot1"></div>
+		</td>
+		<td valign="top" style="border-left : 5px solid blue; "">
+			<h2>Output</h2>
+			<div id="output">
+				<p id="window_len"></p>
+				<p id="window_range"></p>
+			</div>
+		</td>
+	</tr>
+</table>
 
-<h2 id="title">Channel Name</h2>
-
-<div id="line_plot1"></div>
 
 <!-- Load d3.js -->
 <script src="https://d3js.org/d3.v4.js"></script>

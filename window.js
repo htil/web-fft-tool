@@ -87,29 +87,10 @@ function draw(d, id){
   d3.select("#title")
     .text(channel)
     .attr("transform",
-    "translate(" + (width/2) + ", 0)");
-
-  // Add a clipPath: everything out of this area won't be drawn.
-  var clip = svg.append("defs").append("svg:clipPath")
-    .attr("id", "clip")
-    .append("svg:rect")
-    .attr("width", width )
-    .attr("height", height )
-    .attr("x", 0)
-    .attr("y", 0);
-  
-
-  // Add brushing
-  var brush = d3.brushX()                
-  .extent( [ [0,0], [width,height] ] )  
-  .on("end", brushed)
-
-  // Create the line variable for the line brush
-  var line = svg.append('g')
-    .attr("clip-path", "url(#clip)")  
+    "translate(" + (width/2) + ", 0)");  
 
   // Add the line
-  line.append("path")
+  line = svg.append("path")
     .datum(data)
     .attr("class", "line")  // I add the class line to be able to modify this line later on.
     .attr("fill", "none")
@@ -120,13 +101,38 @@ function draw(d, id){
       .y(function(d) { return y(d.amplitude) })
     )
 
+	// Add brushing
+	var brush = d3.brushX()                
+		.extent( [ [0,0], [width,height] ] )  
+		.on("end", brushed)
   // Add the brushing
- line
+ svg
     .append("g")
       .attr("class", "brush")
       .call(brush)
-      .call(brush.move, [0,100]);
+      .call(brush.move, [0,10].map(x));
     // TODO: add functionality to change the brush width based on inputing the number of seconds
+
+	// Move window to selected time range
+	d3.select("#window_button").on("click", function(d) {
+	
+		var start = d3.select("#window_start").property("value");
+		var end = d3.select("#window_end").property("value");
+
+		if(start > end){
+			alert(`Error: Incorrect window range. Start time cannot be greater than end time.`);
+		} else if (end < start){
+			alert(`Error: Incorrect window range. End time cannot be less than start time.`);
+		} else if(start < x.domain()[0] || end < x.domain()[0]){
+			alert(`Error: Invalid input. ${start < x.domain()[0] ? start : end} is less than ${x.domain()[0]}`);
+		} else if (start > x.domain()[1] || end > x.domain()[1]){
+			alert(`Error: Invalid input. ${start > x.domain()[0] ? start : end} is greater than ${x.domain()[1]}`);
+		} else {
+			d3.select('.brush')
+				.call(brush.move, [start ,end].map(x));
+		}
+
+	});
 
   // A function that update the chart for given boundaries
   function brushed() {
@@ -134,8 +140,9 @@ function draw(d, id){
     var extent = d3.event.selection;
 
     // Calculate exact time range of window
-    //var rangeExtent = [x( extent[0] ), x( extent[1] ) ]; //convert
-    //var rangeWidth  = rangeExtent[1] - rangeExtent[0];
+    var rangeExtent = [x( extent[0] ), x( extent[1] ) ]; //convert
+    var rangeWidth  = rangeExtent[1] - rangeExtent[0];
+
 
     // Get lower/upper bounds of the window (time)
     var time_range = extent.map(x.invert, x);
@@ -151,6 +158,18 @@ function draw(d, id){
     // Slice out the original data based on the window selection
     var windowData = data.slice(lower, upper+1);
     console.log(windowData);
+		
+		// Output the length of the window
+		d3.select("#window_len")
+    .text(`Window length: ${(time_range[1] - time_range[0]).toFixed(3)} seconds`)
+		
+		// Output the range of the window
+		d3.select("#window_range")
+		.text(`Window range: ${(time_range[0].toFixed(3))} sec to ${(time_range[1].toFixed(3))} sec`);
+
+		// Update the time range input boxes (if brush is dragged)
+		document.getElementById('window_start').value = time_range[0].toFixed(3);
+		document.getElementById('window_end').value = time_range[1].toFixed(3);
 
     // TODO: Add code for calculation FFTs, Bandpower, Visualizations, etc using the windowData...
     
