@@ -29,7 +29,7 @@ function getEEGData(channelNames, data, freq)
   return d;
 };
 
-function draw(d, id){
+function draw(d, id, freq){
   // Extract data and channel name
   let data = d.value;
   let channel = d.channel;
@@ -143,6 +143,7 @@ function draw(d, id){
     
     // Parse out the time data from the original dataset
     let tData = data.map(a => a.time);
+		let aData = data.map(a => a.amplitude);
 
     // Calulate the upper and lower indexes of original dataset
     var lower = findClosestIdx(time_range[0], tData);
@@ -150,23 +151,25 @@ function draw(d, id){
     //console.log(`lower: ${lower} upper: ${upper}`);
 
     // Slice out the original data based on the window selection
-    var windowData = data.slice(lower, upper+1);
+    var windowData = aData.slice(lower, upper+1);
     console.log(windowData);
 		
-		// Output the length of the window
-		d3.select("#window_len")
-    .text(`Window length: ${(time_range[1] - time_range[0]).toFixed(3)} seconds`)
-		
-		// Output the range of the window
-		d3.select("#window_range")
-		.text(`Window range: ${(time_range[0].toFixed(3))} sec to ${(time_range[1].toFixed(3))} sec`);
+		// Output the length/range of the window
+		document.getElementById('window_len').innerText = `Window length: ${(time_range[1] - time_range[0]).toFixed(3)} seconds`;
+		document.getElementById('window_range').innerText = `Window range: ${(time_range[0].toFixed(3))} sec to ${(time_range[1].toFixed(3))} sec`;
 
 		// Update the time range input boxes (if brush is dragged)
 		document.getElementById('window_start').value = time_range[0].toFixed(3);
 		document.getElementById('window_end').value = time_range[1].toFixed(3);
 
     // TODO: Add code for calculation FFTs, Bandpower, Visualizations, etc using the windowData...
-    
+    let bandpower = bci.bandpower(windowData, freq, ['delta', 'theta', 'alpha', 'beta', 'gamma']);
+		document.getElementById('delta_bp').innerText = `Delta Bandpower: ${bandpower[0].toFixed(3)}`;
+		document.getElementById('theta_bp').innerText = `Theta Bandpower: ${bandpower[1].toFixed(3)}`;
+		document.getElementById('alpha_bp').innerText = `Alpha Bandpower: ${bandpower[2].toFixed(3)}`;
+		document.getElementById('beta_bp').innerText = `Beta Bandpower: ${bandpower[3].toFixed(3)}`;
+		document.getElementById('gamma_bp').innerText = `Gamma Bandpower: ${bandpower[4].toFixed(3)}`;
+
   }  
 };
 
@@ -200,8 +203,13 @@ function updateDropdown(channelNames)
     .attr("value", function () { return i++; }) // corresponding value
 };
 
-
-function drawRawFromFile(file, id)
+/**
+ * Use this function to draw a raw plot from a local .csv file.
+ * @param {string} file - the .csv file you wish to read in
+ * @param {number} freq - the sampling frequency of the data
+ * @param {string} id - the id of the HTML element you wish you place the raw plot
+ */
+function drawRawFromFile(file, freq, id)
 {
   d3.csv(file, 
     function(data) {
@@ -212,10 +220,10 @@ function drawRawFromFile(file, id)
       updateDropdown(channelNames)
 
       // Get the EEG Data from the .csv file
-      var allData = getEEGData(channelNames, data, 512);
+      var allData = getEEGData(channelNames, data, freq);
 
       // Plot the first channel's data
-      draw(allData[0], id);
+      draw(allData[0], id, freq);
       
       // Dropdown change behavior
       d3.select("#dropdown").on("change", function(d) {
@@ -229,4 +237,4 @@ function drawRawFromFile(file, id)
   });
 };
 
-drawRawFromFile("A114_raw_512HZ.csv", "line_plot1");
+drawRawFromFile("A114_raw_512HZ.csv", 512, "line_plot1");
