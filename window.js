@@ -102,17 +102,23 @@ function draw(d, id, freq){
 	var brush = d3.brushX()                
 		.extent( [ [0,0], [width,height] ] )  
 		.on("start brush end", brushed)
-  // Add the brushing
+
  svg
     .append("g")
       .attr("class", "brush")
       .call(brush)
-      .call(brush.move, [0,10].map(x));
-    // TODO: add functionality to change the brush width based on inputing the number of seconds
+      .call(brush.move, [d3.select("#window_start").property("value"),d3.select("#window_end").property("value")].map(x));
 
-	// Move window to selected time range
-	d3.select("#window_button").on("click", function(d) {
+	// Event listeners to move the brush
+	d3.select("#window_button").on("click", moveBrush);
+	d3.selectAll("input").on("change", moveBrush);
+	d3.selectAll("input").on("keyup", function(event){
+		if (event.keyCode === 13) {
+			moveBrush();
+	  }
+	});
 	
+	function moveBrush(){
 		var start = d3.select("#window_start").property("value");
 		var end = d3.select("#window_end").property("value");
 
@@ -130,8 +136,7 @@ function draw(d, id, freq){
 			d3.select('.brush')
 				.call(brush.move, [start ,end].map(x));
 		}
-
-	});
+	};
 
   // A function that update the chart for given boundaries
   function brushed() {
@@ -148,11 +153,9 @@ function draw(d, id, freq){
     // Calulate the upper and lower indexes of original dataset
     var lower = findClosestIdx(time_range[0], tData);
     var upper = findClosestIdx(time_range[1], tData);
-    //console.log(`lower: ${lower} upper: ${upper}`);
 
     // Slice out the original data based on the window selection
     var windowData = aData.slice(lower, upper+1);
-    console.log(windowData);
 		
 		// Output the length/range of the window
 		document.getElementById('window_len').innerText = `Window length: ${(time_range[1] - time_range[0]).toFixed(3)} seconds`;
@@ -232,7 +235,7 @@ function drawRawFromFile(file, freq, id)
         
         // Remove and then redraw the plot
         d3.select("svg").remove();
-        draw(allData[selectedOption], id);
+        draw(allData[selectedOption], id, freq);
       });
   });
 };
