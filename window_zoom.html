@@ -1,5 +1,18 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<style>
+
+ .line {
+        fill: none;
+        stroke: steelblue;
+        stroke-width: 1.5px;
+    }
+.zoom {
+  cursor: move;
+  fill: none;
+  pointer-events: all;
+}
+</style>
 
 <h1>EEG Raw Plot</h1>
 <p>You can resize the sliding window by clicking on the edges. Move window left to right to select a new subset of data.</p>
@@ -19,7 +32,7 @@
 	<tr>
 		<td>
 			<h2 id="title">Channel Name</h2>
-			<div id="line_plot1"></div>
+			<svg width="1200" height="550"></svg>
 		</td>
 		<td valign="top" style="border-left : 5px solid blue; "">
 			<h2>Output</h2>
@@ -37,7 +50,5 @@
 </table>
 
 
-<!-- Load d3.js -->
-<script src="https://d3js.org/d3.v4.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bcijs@1.8.0/dist/bci.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="window_zoom.js"></script>
