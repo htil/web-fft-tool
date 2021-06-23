@@ -2,7 +2,7 @@ function draw(d, freq) {
   // Extract data and channel name
   let data = d.value;
   let channel = d.channel;
-	
+
   d3.select("#title")
     .text(channel)
     .attr("transform", "translate(" + width / 2 + ", 0)");
@@ -276,22 +276,31 @@ function doFFT(data, Fs){
 	var fft = new FFT();
 	fft.calc(1, real, imaginary);
 
+	let freq = fft.frequencies(real, imaginary, Fs);
+	let mag = fft.amplitude(real, imaginary);
+	let length = freq.length;
+	//console.log(freq);
+	/*
+	//s is real so the fft response is conjugate symmetric and we retain only the first N/2 points
+  let N = real.length;
+	var length = N/2;
+
 	// Create the array of frequencies
 	var freq=[];
-	for(let i=0; i<real.length/2;i++){
-		let fq= Fs*i/(real.length);
+	for(let i=0; i<length;i++){
+		let fq= Fs*i/(N);
 		freq.push(fq);
 	}
 
 	// Calculate the magnitudes
 	var mag = [];
-	for(let i=0; i<real.length/2; i++){
+	for(let i=0; i<length; i++){
 		mag.push(Math.sqrt(Math.pow(real[i], 2) + Math.pow(imaginary[i], 2))/real.length);
 	}
-
+*/
 	// Create the dataset for the d3 chart
 	fftData = [];
-	for(let i=0; i<real.length; i++){
+	for(let i=0; i<length; i++){
 		pt = {
 			frequency: freq[i],
 			magnitude: mag[i]
@@ -440,4 +449,5 @@ function drawRawFromFile(file, freq) {
   });
 }
 
-drawRawFromFile("A114_raw_512HZ.csv", 512);
+drawRawFromFile("A114_raw_512Hz.csv", 512);
+//drawRawFromFile("sine_wave3_10Hz.csv", 1000);
