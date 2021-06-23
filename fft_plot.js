@@ -2,7 +2,7 @@ function draw(d, freq) {
   // Extract data and channel name
   let data = d.value;
   let channel = d.channel;
-	console.log(data);
+	
   d3.select("#title")
     .text(channel)
     .attr("transform", "translate(" + width / 2 + ", 0)");
@@ -196,9 +196,9 @@ function draw(d, freq) {
 
   function output(extent) {
     if (extent) {
-	  // Hide the alert if it is a valid window size
-	  $("#window_alert").hide();
-	  $('#output').show();
+			// Hide the alert if it is a valid window size
+			$("#window_alert").hide();
+			$('#output').show();
 
       // Get lower/upper bounds of the window (time)
       var time_range = extent.map(x.invert, x);
@@ -237,114 +237,14 @@ function draw(d, freq) {
       document.getElementById("gamma_bp").innerText = `Gamma Bandpower: ${bandpower[4].toFixed(3)}`;
 
 	  // FFT STUFF?????????????????????????????????????????????????
-			doFFT(windowData);
+			doFFT(windowData, freq);
 	  //?????????????????????????????????????????????????????????????????????
     } else {
-	  $("#window_alert").text("Please select a nonzero window size.");
-	  $("#window_alert").show();
-	  $('#output').hide();
+			$("#window_alert").text("Please select a nonzero window size.");
+			$("#window_alert").show();
+			$('#output').hide();
     }
   }
-
-	function doFFT(data){
-		var real = data;
-	  var imaginary = new Array(real.length);
-	  imaginary.fill(0);
-
-	  var fft = new FFT();
-	  fft.calc(1, real, imaginary);
-	  //console.log(real);
-	  //console.log(imaginary);
-
-		// Calculate the freqency components
-		/*
-		let Fs = 512.0;
-		var maxFreq = Fs/2.0 - Fs/data.length;
-		var delF = Fs/data.length;
-		var freq = [];
-		console.log(maxFreq);
-		for(let i=0; i< maxFreq; i+=delF){
-			freq.push(i);
-		}
-		//console.log(freq);
-		*/
-		var freq=[];
-		let Fs = 512.0;
-		for(let i=0; i<real.length;i++){
-			let fq= Fs*i/real.length;
-			freq.push(fq);
-		}
-		//console.log(freq);
-
-		var mag = [];
-		for(let i=0; i<real.length; i++){
-			mag.push(Math.sqrt(Math.pow(real[i], 2) + Math.pow(imaginary[i], 2))/real.length);
-		}
-
-		fftData = [];
-		for(let i=5; i<real.length-5; i++){
-			pt = {
-				frequency: freq[i],
-				magnitude: mag[i]
-			}
-			fftData.push(pt);
-		}
-		console.log(fftData);
-
-		// Remove and then redraw the plot
-		d3.select("#my_fft_plot").remove();
-		//TODO: Don't hard code this in.. Get the HTML
-		$("#hi_there").html("<div id = 'my_fft_plot'></div>");
-		drawFFT(fftData)
-
-	}
-
-	function drawFFT(data){
-		// set the dimensions and margins of the graph
-		var margin3 = {top: 10, right: 30, bottom: 30, left: 60},
-		width3 = 1200 - margin3.left - margin3.right,
-		height3 = 550 - margin3.top - margin3.bottom;
-
-		// append the svg object to the body of the page
-		var svg3 = d3.select("#my_fft_plot")
-		.append("svg")
-		.attr("width", width3 + margin3.left + margin3.right)
-		.attr("height", height3 + margin3.top + margin3.bottom)
-		.append("g")
-		.attr("transform",
-					"translate(" + margin3.left + "," + margin3.top + ")");
-
-		//let data3 = data;
-		var data3 = data;
-
-		// Add X axis --> it is a date format
-		var x3 = d3.scaleLinear()
-			.domain(d3.extent(data3, function(d) { return d.frequency; }))
-			.range([ 0, width3 ]);
-		svg3.append("g")
-			.attr("transform", "translate(0," + height3 + ")")
-			.call(d3.axisBottom(x3));
-
-		// Add Y axis
-		var y3 = d3.scaleLinear()
-			.domain(d3.extent(data3, function(d) { return d.magnitude; }))
-			.range([ height3, 0 ]);
-		svg3.append("g")
-			.call(d3.axisLeft(y3));
-
-		// Add the line
-		svg3.append("path")
-			.datum(data3)
-			.attr("fill", "none")
-			.attr("stroke", "steelblue")
-			.attr("stroke-width", 1.5)
-			.attr("d", d3.line()
-				.x(function(d) { return x3(d.frequency) })
-				.y(function(d) { return y3(d.magnitude) })
-				)
-	}
-
-
 
   function brushedZoom() {
     if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
@@ -364,6 +264,92 @@ function draw(d, freq) {
   }
 
 } // End of draw()
+
+
+function doFFT(data, Fs){
+	// Set up arrays for real and imaginary components
+	var real = data;
+	var imaginary = new Array(real.length);
+	imaginary.fill(0);
+
+	// Calculate the fft
+	var fft = new FFT();
+	fft.calc(1, real, imaginary);
+
+	// Create the array of frequencies
+	var freq=[];
+	for(let i=0; i<real.length/2;i++){
+		let fq= Fs*i/(real.length);
+		freq.push(fq);
+	}
+
+	// Calculate the magnitudes
+	var mag = [];
+	for(let i=0; i<real.length/2; i++){
+		mag.push(Math.sqrt(Math.pow(real[i], 2) + Math.pow(imaginary[i], 2))/real.length);
+	}
+
+	// Create the dataset for the d3 chart
+	fftData = [];
+	for(let i=0; i<real.length; i++){
+		pt = {
+			frequency: freq[i],
+			magnitude: mag[i]
+		}
+		fftData.push(pt);
+	}
+
+	// Remove and then redraw the plot
+	d3.select("#fft_plot").remove();
+	//TODO: Don't hard code this in.. Get the HTML
+	$("#fft_div").html("<div id = 'fft_plot'></div>");
+
+	// Exclude the first 5 points
+	drawFFT(fftData.slice(5))
+
+}
+
+function drawFFT(data_fft){
+	// set the dimensions and margins of the graph
+	var margin_fft = {top: 10, right: 30, bottom: 30, left: 60},
+	width_fft = 1200 - margin_fft.left - margin_fft.right,
+	height_fft = 550 - margin_fft.top - margin_fft.bottom;
+
+	// append the svg object to the body of the page
+	var svg_fft = d3.select("#fft_plot")
+	.append("svg")
+	.attr("width", width_fft + margin_fft.left + margin_fft.right)
+	.attr("height", height_fft + margin_fft.top + margin_fft.bottom)
+	.append("g")
+	.attr("transform",
+				"translate(" + margin_fft.left + "," + margin_fft.top + ")");
+
+	// Add X axis --> it is a date format
+	var x_fft = d3.scaleLinear()
+		.domain(d3.extent(data_fft, function(d) { return d.frequency; }))
+		.range([ 0, width_fft ]);
+	svg_fft.append("g")
+		.attr("transform", "translate(0," + height_fft + ")")
+		.call(d3.axisBottom(x_fft));
+
+	// Add Y axis
+	var y_fft = d3.scaleLinear()
+		.domain(d3.extent(data_fft, function(d) { return d.magnitude; }))
+		.range([ height_fft, 0 ]);
+	svg_fft.append("g")
+		.call(d3.axisLeft(y_fft));
+
+	// Add the line
+	svg_fft.append("path")
+		.datum(data_fft)
+		.attr("fill", "none")
+		.attr("stroke", "steelblue")
+		.attr("stroke-width", 1.5)
+		.attr("d", d3.line()
+			.x(function(d) { return x_fft(d.frequency) })
+			.y(function(d) { return y_fft(d.magnitude) })
+			)
+}
 
 function getChannelData(channel, data, freq) {
   let d = data.map((a) => a[channel]).map(Number);
@@ -448,8 +434,7 @@ function drawRawFromFile(file, freq) {
       // Remove and then redraw the plot
       d3.select("svg").remove();
       //TODO: Don't hard code this in.. Get the HTML
-      document.getElementById("plot").innerHTML =
-        "<svg width='1200' height='550'></svg>";
+      document.getElementById("plot").innerHTML = "<svg width='1200' height='550'></svg>";
       draw(allData[selectedOption], freq);
     });
   });
