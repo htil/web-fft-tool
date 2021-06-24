@@ -1,4 +1,5 @@
 function draw(d, freq) {
+	// TODO: Make this function compatible with any dataset..
   // Extract data and channel name
   let data = d.value;
   let channel = d.channel;
@@ -276,34 +277,20 @@ function doFFT(data, Fs){
 	var fft = new FFT();
 	fft.calc(1, real, imaginary);
 
+	// Calculate frequencies
 	let freq = fft.frequencies(real, imaginary, Fs);
+
+	// Calculate magnitudes, divide by N
 	let mag = fft.amplitude(real, imaginary);
-	let length = freq.length;
-	//console.log(freq);
-	/*
-	//s is real so the fft response is conjugate symmetric and we retain only the first N/2 points
-  let N = real.length;
-	var length = N/2;
+	mag = mag.map(x => x/data.length);
 
-	// Create the array of frequencies
-	var freq=[];
-	for(let i=0; i<length;i++){
-		let fq= Fs*i/(N);
-		freq.push(fq);
-	}
-
-	// Calculate the magnitudes
-	var mag = [];
-	for(let i=0; i<length; i++){
-		mag.push(Math.sqrt(Math.pow(real[i], 2) + Math.pow(imaginary[i], 2))/real.length);
-	}
-*/
 	// Create the dataset for the d3 chart
 	fftData = [];
-	for(let i=0; i<length; i++){
-		pt = {
+	for(let i=0; i<freq.length; i++){
+		let pt = {
 			frequency: freq[i],
 			magnitude: mag[i]
+			//magnitude: real[i]
 		}
 		fftData.push(pt);
 	}
@@ -314,7 +301,8 @@ function doFFT(data, Fs){
 	$("#fft_div").html("<div id = 'fft_plot'></div>");
 
 	// Exclude the first 5 points
-	drawFFT(fftData.slice(5))
+	drawFFT(fftData.slice(15));
+	//drawFFT(fftData);
 
 }
 
@@ -448,6 +436,8 @@ function drawRawFromFile(file, freq) {
     });
   });
 }
+
+//TODO: Add an option to generate a signal and then draw it
 
 drawRawFromFile("A114_raw_512Hz.csv", 512);
 //drawRawFromFile("sine_wave3_10Hz.csv", 1000);

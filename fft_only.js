@@ -11,6 +11,8 @@ let frequencies = [
 
 let signal = bci.generateSignal(amplitudes, frequencies, sampleRate, duration);
 
+console.log(signal);
+
 // Compute relative power in each frequency band
 let bandpowers = bci.bandpower(
 	signal,
@@ -21,69 +23,108 @@ let bandpowers = bci.bandpower(
 
 console.log(bandpowers);
 
-doFFT(signal);
+doFFT(signal, sampleRate);
+drawSignal(signal, "raw_plot");
 
-function doFFT(data){
+function doFFT(data, Fs){
+	// Set up arrays for real and imaginary components
+	let original_len = data.length;
 	var real = data;
 	var imaginary = new Array(real.length);
 	imaginary.fill(0);
 
+	// Calculate the fft
 	var fft = new FFT();
 	fft.calc(1, real, imaginary);
-	//console.log(real);
-	//console.log(imaginary);
 
-	// Calculate the freqency components
-	/*
-	let Fs = 512.0;
-	var maxFreq = Fs/2.0 - Fs/data.length;
-	var delF = Fs/data.length;
-	var freq = [];
-	console.log(maxFreq);
-	for(let i=0; i< maxFreq; i+=delF){
-		freq.push(i);
-	}
-	//console.log(freq);
-	*/
-	var freq=[];
-	let Fs = 512.0;
-	for(let i=0; i<real.length/2;i++){
-		let fq= Fs*i/real.length;
-		freq.push(fq);
-	}
-	//console.log(freq);
+	let freq = fft.frequencies(real, imaginary, Fs);
+	let mag = fft.amplitude(real, imaginary);
+	let length = freq.length;
 
-	var mag = [];
-	for(let i=0; i<real.length; i++){
-		mag.push(Math.sqrt(Math.pow(real[i], 2) + Math.pow(imaginary[i], 2))/real.length);
-	}
+	/*for(let i=0; i<length; i++){
+		mag[i]=mag[i]/original_len;
+	}*/
+	mag = mag.map(x => x/original_len);
 
+	// Create the dataset for the d3 chart
 	fftData = [];
-	for(let i=5; i<real.length-5; i++){
+	for(let i=0; i<length; i++){
 		pt = {
 			frequency: freq[i],
 			magnitude: mag[i]
 		}
 		fftData.push(pt);
 	}
-	//console.log(fftData);
 
 	// Remove and then redraw the plot
 	d3.select("#my_fft_plot").remove();
 	//TODO: Don't hard code this in.. Get the HTML
 	$("#hi_there").html("<div id = 'my_fft_plot'></div>");
-	drawFFT(fftData)
+	drawFFT(fftData, "my_fft_plot")
 
 }
 
-function drawFFT(data){
+function drawSignal(r_data, id){
+	var data = [];
+	for(let i=0; i<r_data.length; i++){
+		pt = {
+			magnitude: r_data[i],
+			time: i/sampleRate
+		}
+		data.push(pt);
+	}
+	console.log(data);
+
+	// set the dimensions and margins of the graph
+	var margin = {top: 10, right: 30, bottom: 30, left: 60},
+	width = 1200 - margin.left - margin.right,
+	height = 550 - margin.top - margin.bottom;
+
+	// append the svg object to the body of the page
+	var svg = d3.select("#"+id)
+	.append("svg")
+	.attr("width", width + margin.left + margin.right)
+	.attr("height", height + margin.top + margin.bottom)
+	.append("g")
+	.attr("transform",
+				"translate(" + margin.left + "," + margin.top + ")");
+
+	// Add X axis --> it is a date format
+	var x = d3.scaleLinear()
+		.domain(d3.extent(data, function(d) { return d.time; }))
+		.range([ 0, width ]);
+	svg.append("g")
+		.attr("transform", "translate(0," + height + ")")
+		.call(d3.axisBottom(x));
+
+	// Add Y axis
+	var y = d3.scaleLinear()
+		.domain(d3.extent(data, function(d) { return d.magnitude; }))
+		.range([ height, 0 ]);
+	svg.append("g")
+		.call(d3.axisLeft(y));
+
+	// Add the line
+	svg.append("path")
+		.datum(data)
+		.attr("fill", "none")
+		.attr("stroke", "steelblue")
+		.attr("stroke-width", 1.5)
+		.attr("d", d3.line()
+			.x(function(d) { return x(d.time) })
+			.y(function(d) { return y(d.magnitude) })
+			)
+}
+
+
+function drawFFT(data, id){
 	// set the dimensions and margins of the graph
 	var margin3 = {top: 10, right: 30, bottom: 30, left: 60},
 	width3 = 1200 - margin3.left - margin3.right,
 	height3 = 550 - margin3.top - margin3.bottom;
 
 	// append the svg object to the body of the page
-	var svg3 = d3.select("#my_fft_plot")
+	var svg3 = d3.select("#"+id)
 	.append("svg")
 	.attr("width", width3 + margin3.left + margin3.right)
 	.attr("height", height3 + margin3.top + margin3.bottom)
