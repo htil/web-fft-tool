@@ -10,8 +10,8 @@ Feel free to add ideas to the To-do List!
   - [ ] Stacked/Multi-channel Display
 - [x] Add sliding window
 - [x] Extract raw data from sliding window
-- [ ] Calculate FFT from window
-- [ ] Output result of FFT/bandpower
+- [x] Calculate FFT from window
+- [x] Output result of FFT/bandpower
 - [ ] Convert to library?
 - [ ] Come up with a cooler name for the repo :sunglasses:
 
