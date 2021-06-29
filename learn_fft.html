@@ -1,130 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	 <!-- Bootstrap CSS -->
-	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+      integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+      integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk"
+      crossorigin="anonymous"
+    />
 
-	<style>
+    <style>
+      body {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-top: 60px;
+      }
+      footer {
+        bottom: 0;
+        width: 100%;
+      }
+    </style>
+  </head>
 
-	body {
-		padding-left: 10px;
-		padding-right: 10px;
-		padding-top: 60px;
-	}
-    footer {
-		bottom: 0;
-		width: 100%;
-    }
-
-	</style>
-</head>
-
-<body>
-	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-		<div class="container-fluid">
-		  <a class="navbar-brand" href="#">Web FFT</a>
-		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		  </button>
-		  <div class="collapse navbar-collapse" id="navbarCollapse">
-			<ul class="navbar-nav me-auto mb-2 mb-md-0">
-			  <li class="nav-item">
-				<a class="nav-link" href="index.html">Home</a>
-			  </li>
-			  <li class="nav-item dropdown">
-				<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="learn_fft.html">Learn</a>
-				<div class="dropdown-menu" aria-labelledby="dropdown01">
-				  <a class="dropdown-item" href="learn_fft.html">What is an FFT?</a>
-				  <a class="dropdown-item" href="learn_freq_amp.html">Frequency and Amplitude</a>
-				</div>
-			  </li>
-			  <li class="nav-item">
-				<a class="nav-link" href="signal_gen.html">Play</a>
-			  </li>
-			</ul>
-		  </div>
-		  <ul class="nav navbar-nav navbar-right">
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Web FFT</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
             <li class="nav-item">
-				<a class="nav-link" href="https://github.com/htil/eeg-web-viz"><i class="fab fa-github"></i>&nbspGithub Repo</a>
-			</li>
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="dropdown01"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                href="learn_fft.html"
+                >Learn</a
+              >
+              <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="dropdown-item" href="learn_fft.html"
+                  >What is an FFT?</a
+                >
+                <a class="dropdown-item" href="learn_freq_amp.html"
+                  >Frequency and Amplitude</a
+                >
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="signal_gen.html">Play</a>
+            </li>
           </ul>
-		</div>
-	  </nav>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/htil/eeg-web-viz"
+              ><i class="fab fa-github"></i>&nbspGithub Repo</a
+            >
+          </li>
+        </ul>
+      </div>
+    </nav>
 
-	  <h1><abbr title="FFT">Fast Fourier Transform</abbr> Without Math</h1>
-	  <a href="IMG_2756.jpeg">
-		<p style="text-align: center">
-		  <img
-			src="IMG_2756.jpeg"
-			alt="Sound Waves"
-			width="1000"
-			height="600"
-		  /></p
-	  ></a>
-  
-	  <br />
-	  <br />
-	  <h2>What is an FFT?</h2>
-	  <p>
-		In simple terms, a mathematical algoithm that processes and computes data
-		from the original domain(often time or space) to a frequency domain. It is
-		usually used to modify or filter audio waves, images, and videos. FFT's
-		are also used to take difficult functions and simplify them.
-	  </p>
-	  <a href="IMG_2761.jpeg">
-		<img src="IMG_2761.jpeg" alt="Time Chart with Three Frequency Charts" />
-	  </a>
-  
-	  <br />
-	  <a href="Frequency and Amplitude.html" target="__blank"
-		>Frequency and Amplitude</a
-	  >
-	  <h2>Why Convert from the Time Domain to Frequency?</h2>
-	  <p>
-		In order to answer this question, we have to look at what each domain
-		tells us. In most diagrams, you can see the two different domains.(Time
-		and Frequency). <b>Time Domain</b>- You can see the change in amplitude
-		over time but the frequency is shown as one signal. It only shows the
-		average peaks of the frequency in this domain. <b>Frequency Domain</b>-
-		When we view into the frequency domain we actually see that the signal
-		above is actually composed of three different frequencies. It is easier to
-		modify and analyze the signal when it is broken down into its most basic
-		parts. An analogy you could think of are the ingredients to a cake. It's
-		much easier to understand the properties of a cake by looking at the
-		ingredients within. Knowing that cakes are made from milk and eggs lets
-		you know that they do not stay fresh for long. Let's move to the next
-		diagram for a better example.
-	  </p>
-	  <img src="img" alt="" />
-  
-	  <p>
-		In the diagram below, you can see the view of both the time domain and the
-		frequency domain When viewing from the perspective of the time domain you
-		can only visualize one frequency as all of them are combined. It just
-		looks like one line with the averages of the combined frequencies. ​ But
-		when viewing from the perspective of the frequency domain you can see
-		three distinct frequencies of different color and amplitude. ​ FFT changes
-		the domain from time to frequency allowing us to dissect the multiple
-		different frequencies that make up each signal.
-	  </p>
-	  <a href="IMG_2763.jpeg">
-		<img
-		  src="IMG_2763.jpeg"
-		  alt="Point of Veiw from Time Domain to Frequency"
-		/>
-	  </a>
-	  <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
-	  <div style="margin-top: 500px"></div>
+    <h1><abbr title="FFT">Fast Fourier Transform</abbr> Without Math</h1>
+    <a href="images/images/IMG_2756.jpeg">
+      <p style="text-align: center">
+        <img
+          src="images/images/IMG_2756.jpeg"
+          alt="Sound Waves"
+          width="1000"
+          height="600"
+        /></p
+    ></a>
 
-      <footer>
-        <hr>
-        <p>&copy; UA HTIL 2021</p>
+    <br />
+    <br />
+    <h2>What is an FFT?</h2>
+    <p>
+      In simple terms, a mathematical algoithm that processes and computes data
+      from the original domain(often time or space) to a frequency domain. It is
+      usually used to modify or filter audio waves, images, and videos. FFT's
+      are also used to take difficult functions and simplify them.
+    </p>
+    <a href="images/IMG_2761.jpeg">
+      <img
+        src="images/IMG_2761.jpeg"
+        alt="Time Chart with Three Frequency Charts"
+      />
+    </a>
+
+    <br />
+    <a href="Frequency and Amplitude.html" target="__blank"
+      >Frequency and Amplitude</a
+    >
+    <h2>Why Convert from the Time Domain to Frequency?</h2>
+    <p>
+      In order to answer this question, we have to look at what each domain
+      tells us. In most diagrams, you can see the two different domains.(Time
+      and Frequency). <b>Time Domain</b>- You can see the change in amplitude
+      over time but the frequency is shown as one signal. It only shows the
+      average peaks of the frequency in this domain. <b>Frequency Domain</b>-
+      When we view into the frequency domain we actually see that the signal
+      above is actually composed of three different frequencies. It is easier to
+      modify and analyze the signal when it is broken down into its most basic
+      parts. An analogy you could think of are the ingredients to a cake. It's
+      much easier to understand the properties of a cake by looking at the
+      ingredients within. Knowing that cakes are made from milk and eggs lets
+      you know that they do not stay fresh for long. Let's move to the next
+      diagram for a better example.
+    </p>
+    <img src="img" alt="" />
+
+    <p>
+      In the diagram below, you can see the view of both the time domain and the
+      frequency domain When viewing from the perspective of the time domain you
+      can only visualize one frequency as all of them are combined. It just
+      looks like one line with the averages of the combined frequencies. ​ But
+      when viewing from the perspective of the frequency domain you can see
+      three distinct frequencies of different color and amplitude. ​ FFT changes
+      the domain from time to frequency allowing us to dissect the multiple
+      different frequencies that make up each signal.
+    </p>
+    <a href="images/IMG_2763.jpeg">
+      <img
+        src="images/IMG_2763.jpeg"
+        alt="Point of Veiw from Time Domain to Frequency"
+      />
+    </a>
+    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+    <div style="margin-top: 500px"></div>
+
+    <footer>
+      <hr />
+      <p>&copy; UA HTIL 2021</p>
     </footer>
-</body>
+  </body>
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> <!-- jQuery-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> <!-- Popper -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script> <!-- Bootstrap CSS -->
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <!-- jQuery-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <!-- Popper -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <!-- Bootstrap CSS -->
+</html>
