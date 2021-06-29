@@ -34,7 +34,7 @@ function draw(data, freq) {
     ])
     .on("brush end", brushed);
 
-
+    
   var line = d3
     .line()
     .x(function (d) {
@@ -177,7 +177,7 @@ function draw(data, freq) {
       document.getElementById("window_end").value = time_range[1].toFixed(3);
 
 
-	  // Do the FFT
+      // Do the FFT
 			doFFT(windowData, freq);
 
     } else {
