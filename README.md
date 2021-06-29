@@ -1,5 +1,5 @@
-# eeg-web-viz
-Scripts for EEG Visualization using Javascript  
+# web-fft-tool
+A website designed to teach students about Fast Fourier Transforms. Includes an educational module and interactive FFT visualization tool. Also contains an additional tool 
 
 Feel free to add ideas to the To-do List!
 
@@ -17,6 +17,7 @@ Feel free to add ideas to the To-do List!
 - [x] Amplitude slider/input
 - [x] Frequency slider/input
 - [ ] Verification of text input
+- [ ] Different kinds of waveforms (square, sawtooth, triangle, etc)
 #### Research Tool
 - [ ] Add ability to upload .csv file
 - [ ] Add field to set sampling frequency
