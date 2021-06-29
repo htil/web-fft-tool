@@ -10,7 +10,7 @@ function draw(d, freq) {
 
   var svg = d3.select("svg"),
     margin = { top: 20, right: 20, bottom: 170, left: 60 },
-    margin2 = { top: 430, right: 20, bottom: 30, left: 60 },
+    margin2 = { top: 430, right: 20, bottom: 50, left: 60 },
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     height2 = +svg.attr("height") - margin2.top - margin2.bottom;
@@ -23,6 +23,22 @@ function draw(d, freq) {
   var xAxis = d3.axisBottom(x),
     xAxis2 = d3.axisBottom(x2),
     yAxis = d3.axisLeft(y);
+
+	// Add text label for the x axis
+		svg.append("text")             
+		.attr("transform",
+				"translate(" + (width/2) + " ," + 
+												(height + margin.bottom + 10) + ")")
+		.style("text-anchor", "middle")
+		.text("Time (s)");
+
+		svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left+55)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Amplitude");   
 
   // The brush for the focus (big chart)
   var brush = d3
@@ -266,6 +282,13 @@ function draw(d, freq) {
 
 } // End of draw()
 
+function magToDb(b) {
+	var ret = [];
+	for (var cnt = 0; cnt < b.length; cnt++) {
+		ret.push(20 * Math.log(b[cnt]) * Math.LOG10E);
+	}
+	return ret;
+}
 
 function doFFT(data, Fs){
 	// Set up arrays for real and imaginary components
@@ -283,6 +306,8 @@ function doFFT(data, Fs){
 	// Calculate magnitudes, divide by N
 	let mag = fft.amplitude(real, imaginary);
 	mag = mag.map(x => x/data.length);
+	//mag = magToDb(mag);
+	//mag = mag.map(x => 20*Math.log10(Math.abs(x)));
 
 	// Create the dataset for the d3 chart
 	fftData = [];
@@ -301,14 +326,14 @@ function doFFT(data, Fs){
 	$("#fft_div").html("<div id = 'fft_plot'></div>");
 
 	// Exclude the first 5 points
-	drawFFT(fftData.slice(15));
-	//drawFFT(fftData);
+	//drawFFT(fftData.slice(15));
+	drawFFT(fftData);
 
 }
 
 function drawFFT(data_fft){
 	// set the dimensions and margins of the graph
-	var margin_fft = {top: 10, right: 30, bottom: 30, left: 60},
+	var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
 	width_fft = 1200 - margin_fft.left - margin_fft.right,
 	height_fft = 550 - margin_fft.top - margin_fft.bottom;
 
@@ -335,6 +360,21 @@ function drawFFT(data_fft){
 		.range([ height_fft, 0 ]);
 	svg_fft.append("g")
 		.call(d3.axisLeft(y_fft));
+
+	svg_fft.append("text")             
+		.attr("transform",
+				"translate(" + (width_fft/2) + " ," + 
+												(height_fft + margin_fft.top + 30) + ")")
+		.style("text-anchor", "middle")
+		.text("Frequency (Hz)");
+
+		svg_fft.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin_fft.left)
+    .attr("x",0 - (height_fft / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Magnitude");   
 
 	// Add the line
 	svg_fft.append("path")
@@ -437,7 +477,16 @@ function drawRawFromFile(file, freq) {
   });
 }
 
-//TODO: Add an option to generate a signal and then draw it
+//TODO: Bandpass filtering? https://github.com/markert/fili.js
 
-drawRawFromFile("A114_raw_512Hz.csv", 512);
+//drawRawFromFile("A114_raw_512Hz.csv", 512);
 //drawRawFromFile("sine_wave3_10Hz.csv", 1000);
+drawRawFromFile("righthand-testing.csv", 250);
+
+function updateWindow(){
+	x = w.innerWidth || e.clientWidth || g.clientWidth;
+	y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+
+	svg.attr("width", x).attr("height", y);
+}
+d3.select(window).on('resize', updateWindow);

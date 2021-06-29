@@ -41,37 +41,36 @@
 		</div>
 	</div>
 
-
-	<div id="signal_gen">
-		<div class="form-row py-1">
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">Amplitude: </label></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
-			<div class="col-4"><input type=range id="amplitudeRange" class="form-control signal_control" value="10" min="0" max="100" onchange="$('#amplitudeInput').val(this.value)"></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">100</label></div>
-			<div class="col-1"><input type="number" id="amplitudeInput" class="form-control signal_control" min="0" max="100" value="10" onchange="$('#amplitudeRange').val(this.value)" /></div>
-		</div>
-		<div class="form-row py-1">
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">Frequency: </label></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
-			<div class="col-4"><input type=range id="frequencyRange" class="form-control signal_control" value="10" min="0" max="255" onchange="$('#frequencyInput').val(this.value)"></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">255</label></div>
-			<div class="col-1"><input type="number" id="frequencyInput" class="form-control signal_control col-xs" min="0" max="255" value="10" onchange="$('#frequencyRange').val(this.value)" /></div>
+	<h4>Signal Generation</h4>
+	<div id = "signal_gen">
+		<div id="clonedInput1" class="clonedInput">
+			<div class="form-row py-1">
+				<div class="col-0"><label id="ampLabel" class="col-xs-1" style="font-size: 20px">Amplitude 1: </label></div>
+				<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
+				<div class="col-2"><input type=range id="amplitudeRange1" class="form-control signal_control" value="10" min="0" max="100" onchange="$('#amplitudeInput1').val(this.value); drawWave();"></div>
+				<div class="col-1"><input type="number" id="amplitudeInput1" class="form-control signal_control amp_value" min="0" max="100" value="10" onchange="$('#amplitudeRange1').val(this.value); drawWave();" /></div>
+				<div class="col-0"><label class="col-xs-1 px-4" style="font-size: 20px">&nbsp</label></div>
+				<div class="col-0"><label id="freqLabel" class="col-xs-1" style="font-size: 20px">Frequency 1:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </label></div>
+				<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
+				<div class="col-2"><input type=range id="frequencyRange1" class="form-control signal_control" value="10" min="0" max="255" onchange="$('#frequencyInput1').val(this.value); drawWave();"></div>
+				<div class="col-1"><input type="number" id="frequencyInput1" class="form-control signal_control col-xs freq_value" min="0" max="255" value="25" onchange="$('#frequencyRange1').val(this.value); drawWave();" /></div>
+				<div class="col-0"><button id="removeButton1" class="btn btn-danger remove" style="display:none">Remove</button></div>
+			</div>
 		</div>
 	</div>
-	<div id="signal_gen2">
-		<div class="form-row py-1">
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">Amplitude 2: </label></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
-			<div class="col-4"><input type=range id="amplitudeRange2" class="form-control signal_control" value="10" min="0" max="100" onchange="$('#amplitudeInput2').val(this.value)"></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">100</label></div>
-			<div class="col-1"><input type="number" id="amplitudeInput2" class="form-control signal_control" min="0" max="100" value="10" onchange="$('#amplitudeRange2').val(this.value)" /></div>
-		</div>
-		<div class="form-row py-1">
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">Frequency 2: </label></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
-			<div class="col-4"><input type=range id="frequencyRange2" class="form-control signal_control" value="10" min="0" max="255" onchange="$('#frequencyInput2').val(this.value)"></div>
-			<div class="col-0"><label class="col-xs-1" style="font-size: 20px">255</label></div>
-			<div class="col-1"><input type="number" id="frequencyInput2" class="form-control signal_control col-xs" min="0" max="255" value="10" onchange="$('#frequencyRange2').val(this.value)" /></div>
+	<div class="form-row py-1">
+		<div class="col-0"><button class="form-control btn-success clone">Add Signal</button></div>
+	</div>
+	<div class="form-row py-1" id="adv_opt_row">
+		<div class="col-0"><button id="adv_opt_show" class="btn btn-primary" onclick="$('#advanced_options').show(); $(this).hide(); $('#adv_opt_hide').show()">Show Advanced Options</button></div>
+		<div class="col-0"><button id="adv_opt_hide" class="btn btn-primary" style="display:none; "onclick="$('#advanced_options').hide(); $(this).hide(); $('#adv_opt_show').show()">Hide Advanced Options</button></div>
+		<div class="form-row py-1" id="advanced_options" style="display:none;">
+			<div class="col-0"><label id="samplingRate" class="col-xs-1" style="font-size: 20px">Sample Rate: </label></div>
+			<div class="col-2"><input type=range id="sampleRateRange" class="form-control signal_control" value="512" min="256" max="1024" onchange="$('#sampleRateInput').val(this.value); drawWave();"></div>
+			<div class="col-2"><input type="number" id="sampleRateInput" class="form-control signal_control" min="256" max="1024" value="512" onchange="$('#sampleRateRange').val(this.value); drawWave();" /></div>
+			<div class="col-0"><label id="signalDuration" class="col-xs-1" style="font-size: 20px">&nbsp&nbsp&nbspSignal Duration:</label></div>
+			<div class="col-2"><input type="number" id="signalDurationInput" class="form-control signal_control col-xs" min="1" max="10" value="1" onchange="$('#signalDurationRange').val(this.value); drawWave();" /></div>
+			<div class="col-0"><button id="removeButton1" class="btn btn-danger remove" style="display:none">Remove</button></div>
 		</div>
 	</div>
 
@@ -94,7 +93,7 @@
 			</td>
 			
 		</tr>
-		<tr>
+		<tr style='display: none;'>
 			<td valign="top" style="border-left : 5px solid blue; "">
 				<h2>Output</h2>
 				<div id="output">
@@ -121,5 +120,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bcijs@1.8.0/dist/bci.min.js"></script> <!-- bci.js -->
 
 
-<script src="jquery.fft.js"></script>
+<script src="resources/jquery.fft.js"></script>
+<script src="resources/fili.min.js"></script>
 <script src="signal_gen.js"></script>

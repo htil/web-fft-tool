@@ -10,9 +10,10 @@ function draw(data, freq) {
     .attr("transform", "translate(" + width / 2 + ", 0)");
     */
 
+	//	console.log("in draw");
   var svg = d3.select("svg"),
     margin = { top: 20, right: 20, bottom: 170, left: 60 },
-    margin2 = { top: 430, right: 20, bottom: 30, left: 60 },
+    margin2 = { top: 430, right: 20, bottom: 50, left: 60 },
     width = +svg.attr("width") - margin.left - margin.right,
     height = +svg.attr("height") - margin.top - margin.bottom,
     height2 = +svg.attr("height") - margin2.top - margin2.bottom;
@@ -25,6 +26,21 @@ function draw(data, freq) {
   var xAxis = d3.axisBottom(x),
     xAxis2 = d3.axisBottom(x2),
     yAxis = d3.axisLeft(y);
+
+	svg.append("text")             
+		.attr("transform",
+				"translate(" + (width/2) + " ," + 
+												(height + margin.bottom + 10) + ")")
+		.style("text-anchor", "middle")
+		.text("Time (s)");
+
+	svg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin.left+55)
+    .attr("x",0 - (height / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Amplitude"); 
 
   // The brush for the focus (big chart)
   var brush = d3
@@ -216,7 +232,7 @@ function draw(data, freq) {
 
       // Slice out the original data based on the window selection
       var windowData = aData.slice(lower, upper + 1);
-      console.log(windowData.length);
+      //console.log(windowData.length);
 
       // Output the length/range of the window
       document.getElementById("window_len").innerText = `Window length: ${(time_range[1] - time_range[0]).toFixed(3)} seconds`;
@@ -286,6 +302,7 @@ function doFFT(data, Fs){
 	// Calculate magnitudes, divide by N
 	let mag = fft.amplitude(real, imaginary);
 	mag = mag.map(x => x/data.length);
+	mag = mag.map(x => 20*Math.log10(Math.abs(x)));
 
 	// Create the dataset for the d3 chart
 	fftData = [];
@@ -311,7 +328,7 @@ function doFFT(data, Fs){
 
 function drawFFT(data_fft){
 	// set the dimensions and margins of the graph
-	var margin_fft = {top: 10, right: 30, bottom: 30, left: 60},
+	var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
 	width_fft = 800 - margin_fft.left - margin_fft.right,
 	height_fft = 550 - margin_fft.top - margin_fft.bottom;
 
@@ -338,6 +355,21 @@ function drawFFT(data_fft){
 		.range([ height_fft, 0 ]);
 	svg_fft.append("g")
 		.call(d3.axisLeft(y_fft));
+
+	svg_fft.append("text")             
+		.attr("transform",
+				"translate(" + (width_fft/2) + " ," + 
+												(height_fft + margin_fft.top + 30) + ")")
+		.style("text-anchor", "middle")
+		.text("Frequency (Hz)");
+
+	svg_fft.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - margin_fft.left)
+    .attr("x",0 - (height_fft / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Magnitude");  
 
 	// Add the line
 	svg_fft.append("path")
@@ -477,26 +509,90 @@ function convertToD3Data(d, freq) {
   return result;
 }
 
-$(".signal_control").change(
-  drawWave
-);
 
 function drawWave(){
-  let sampleRate = 512;
-  let duration = 1;
-  let amp = [$("#amplitudeInput").val()];
-  amp.push($("#amplitudeInput2").val());
+  let sampleRate = parseInt($("#sampleRateInput").val());
+  let duration = parseInt($("#signalDurationInput").val());
+
+	var amp = $('.amp_value').map((_,el) => el.value).get();
+	var freq = $('.freq_value').map((_,el) => el.value).get();
+	//console.log(amp);
+	//console.log(freq);
   //amp = parseInt(amp);
-  let freq = [$("#frequencyInput").val()];
-  freq.push($("#frequencyInput2").val());
+  //let freq = [$("#frequencyInput1").val()];
   //freq = parseInt(freq);
   let signal = bci.generateSignal(amp, freq, sampleRate, duration);
   var gen = convertToD3Data(signal, sampleRate);
   d3.select("svg").remove();
   //TODO: Don't hard code this in.. Get the HTML
   document.getElementById("plot").innerHTML = "<svg width='800' height='550'></svg>";
+	//console.log("in drawWave");
   draw(gen, sampleRate);
 }
 
+var regex = /^(.+?)(\d+)$/i;
+var cloneIndex = $(".clonedInput").length+1;
+function clone(){
+		$("#clonedInput1").clone()
+        .appendTo("#signal_gen")
+        .attr("id", "clonedInput" +  cloneIndex)
+        .find("*")
+        .each(function() {
+						if(this.id === "ampLabel"){
+							this.innerHTML = `Amplitude ${cloneIndex}:`;
+						}
+						if(this.id === "freqLabel"){
+							this.innerHTML = `Frequency ${cloneIndex}:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`;
+						}
+						if(this.id.includes("amplitudeRange")){
+							//this.attributes.onchange.nodeValue = `$('#amplitudeInput${cloneIndex}').val(this.value)`;
+							$(this).val(10);
+							$(this).attr("onchange", `$('#amplitudeInput${cloneIndex}').val(this.value); drawWave();`);
+						}
+						if(this.id.includes("frequencyRange")){
+							$(this).val(25);
+							$(this).attr("onchange", `$('#frequencyInput${cloneIndex}').val(this.value); drawWave();`);
+						}
+						if(this.id.includes("amplitudeInput")){
+							$(this).val(10);
+							$(this).attr("onchange", `$('#amplitudeRange${cloneIndex}').val(this.value); drawWave();`);
+						}
+						if(this.id.includes("frequencyInput")){
+							$(this).val(25);
+							$(this).attr("onchange", `$('#frequencyRange${cloneIndex}').val(this.value); drawWave();`);
+						}
+						if(this.id.includes("removeButton")){
+							$(this).show();
+						}
+						//ADD if this.id = slider/text onchange = 
+            var id = this.id || "";
+            var match = id.match(regex) || [];
+            if (match.length == 3) {
+                this.id = match[1] + (cloneIndex);
+            }
+        })
+        //.on('click', 'button.clone', clone)
+        .on('click', 'button.remove', remove);
+    cloneIndex++;
+		//console.log("done clone");
+}
+function remove(){
+		if($(this).attr('id') === "removeButton1") return;
+    $(this).parents(".clonedInput").remove();
+		//cloneIndex--;
+		drawWave();
+}
+$("button.clone").on("click", add_signal);
+$("button.remove").on("click", remove);
+
+function add_signal(){
+	clone();
+	drawWave();
+}
+
 drawWave();
-console.log($("#signal_gen").html());
+
+//TODO: add way to set max fft freq
+//TODO: Bandpass filter? Downsampling?
+
+
