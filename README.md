@@ -5,21 +5,25 @@ Feel free to add ideas to the To-do List!
 
 ### To-do List
 
-- [ ] Raw Plot
-  - [x] Single Channel Display
-  - [ ] Stacked/Multi-channel Display
+#### General
+- [x] Raw Plot
 - [x] Add sliding window
 - [x] Extract raw data from sliding window
 - [x] Calculate FFT from window
-- [x] Output result of FFT/bandpower
-- [ ] Convert to library?
+- [x] Output and graph result of FFT
 - [ ] Come up with a cooler name for the repo :sunglasses:
-
-### Instructions
-1. Clone the repo
-2. Put your .csv file in the same directory
-3. Update the JS code to reflect the new .csv file name
-4. Open the .html file
+#### Educational tool
+- [x] Add ability to generate signal using bci.js
+- [x] Amplitude slider/input
+- [x] Frequency slider/input
+- [ ] Verification of text input
+#### Research Tool
+- [ ] Add ability to upload .csv file
+- [ ] Add field to set sampling frequency
+- [ ] Make FFT graph interactive
+  - [ ]  Display frequency/amplitude on mouseover
+- [ ]  Improve layout of statistics summary
+- [ ]  Transpose data from .csv file
 
 ### Data File Format
 As of now, you need a .csv file that has the channel names in the first row and the data in the subsequent rows.
