@@ -479,14 +479,6 @@ function drawRawFromFile(file, freq) {
 
 //TODO: Bandpass filtering? https://github.com/markert/fili.js
 
-//drawRawFromFile("A114_raw_512Hz.csv", 512);
+//drawRawFromFile("data/A114_raw_512Hz.csv", 512);
 //drawRawFromFile("sine_wave3_10Hz.csv", 1000);
-drawRawFromFile("righthand-testing.csv", 250);
-
-function updateWindow(){
-	x = w.innerWidth || e.clientWidth || g.clientWidth;
-	y = w.innerHeight|| e.clientHeight|| g.clientHeight;
-
-	svg.attr("width", x).attr("height", y);
-}
-d3.select(window).on('resize', updateWindow);
+drawRawFromFile("data/righthand-testing.csv", 250);
