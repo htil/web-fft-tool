@@ -4,9 +4,10 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	 <!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<style>
+	 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
 
+	<style>
 	.line {
 			fill: none;
 			stroke: steelblue;
@@ -14,30 +15,49 @@
 		}
 
 	body {
-		margin: 10px;
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 60px;
 	}
 
 	</style>
 </head>
 
 <body>
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+		<div class="container-fluid">
+		  <a class="navbar-brand" href="#">Web FFT</a>
+		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+			  <li class="nav-item">
+				<a class="nav-link" href="home.html">Home</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="learn.html">Learn</a>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link active" aria-current="page" href="#">Play</a>
+			  </li>
+			</ul>
+		  </div>
+		  <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+
+				<a class="nav-link" href="https://github.com/htil/eeg-web-viz"><i class="fab fa-github"></i>&nbspGithub Repo</a>
+			</li>
+          </ul>
+		</div>
+	  </nav>
+
 	<h1>Interactive Fast Fourier Transform</h1>
-	<h5>You can resize the sliding window by clicking on the edges. Move window left to right to select a new subset of data.</h5>
 
 	<div>
 		<div class="form-row py-1" id="channel_select" style="display: none">
 			<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">Select Channel: </label></div>
 			<div class="col-xs-"><select id="dropdown" class="form-select"></select></div>
-		</div>
-		<div class="form-row py-1" id="window_manipulation">
-			<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">Move window to time range (sec): </label></div>
-			<div class="col-xs-"><input type=number id="window_start" class="form-control window_control"></div>
-			<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">to</label></div>
-			<div class="col-xs-"><input type=number id="window_end" class="form-control window_control"></div>
-			<div class="col-xs-"><button id="window_button" class="btn btn-primary">Enter</button></div>
-		</div>
-		<div class="form-row py-1">
-			<div class="col-xs-"><div class="alert alert-danger" role="alert" id="window_alert" style="display:none;"></div></div>
 		</div>
 	</div>
 
@@ -47,8 +67,8 @@
 			<div class="form-row py-1">
 				<div class="col-0"><label id="ampLabel" class="col-xs-1" style="font-size: 20px">Amplitude 1: </label></div>
 				<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
-				<div class="col-2"><input type=range id="amplitudeRange1" class="form-control signal_control" value="10" min="0" max="100" onchange="$('#amplitudeInput1').val(this.value); drawWave();"></div>
-				<div class="col-1"><input type="number" id="amplitudeInput1" class="form-control signal_control amp_value" min="0" max="100" value="10" onchange="$('#amplitudeRange1').val(this.value); drawWave();" /></div>
+				<div class="col-2"><input type=range id="amplitudeRange1" class="form-control signal_control" value="5" min="0" max="10" onchange="$('#amplitudeInput1').val(this.value); drawWave();"></div>
+				<div class="col-1"><input type="number" id="amplitudeInput1" class="form-control signal_control amp_value" min="0" max="10" value="5" onchange="$('#amplitudeRange1').val(this.value); drawWave();" /></div>
 				<div class="col-0"><label class="col-xs-1 px-4" style="font-size: 20px">&nbsp</label></div>
 				<div class="col-0"><label id="freqLabel" class="col-xs-1" style="font-size: 20px">Frequency 1:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp </label></div>
 				<div class="col-0"><label class="col-xs-1" style="font-size: 20px">0</label></div>
@@ -69,7 +89,7 @@
 			<div class="col-2"><input type=range id="sampleRateRange" class="form-control signal_control" value="512" min="256" max="1024" onchange="$('#sampleRateInput').val(this.value); drawWave();"></div>
 			<div class="col-2"><input type="number" id="sampleRateInput" class="form-control signal_control" min="256" max="1024" value="512" onchange="$('#sampleRateRange').val(this.value); drawWave();" /></div>
 			<div class="col-0"><label id="signalDuration" class="col-xs-1" style="font-size: 20px">&nbsp&nbsp&nbspSignal Duration:</label></div>
-			<div class="col-2"><input type="number" id="signalDurationInput" class="form-control signal_control col-xs" min="1" max="10" value="1" onchange="$('#signalDurationRange').val(this.value); drawWave();" /></div>
+			<div class="col-2"><input type="number" id="signalDurationInput" class="form-control signal_control col-xs" min="1" max="10" value="2" onchange="$('#signalDurationRange').val(this.value); drawWave();" /></div>
 			<div class="col-0"><button id="removeButton1" class="btn btn-danger remove" style="display:none">Remove</button></div>
 		</div>
 	</div>
@@ -93,25 +113,29 @@
 			</td>
 			
 		</tr>
-		<tr style='display: none;'>
-			<td valign="top" style="border-left : 5px solid blue; "">
-				<h2>Output</h2>
-				<div id="output">
-					<p id="window_len"></p>
-					<p id="window_range"></p>
-					<p id="delta_bp"></p>
-					<p id="theta_bp"></p>
-					<p id="alpha_bp"></p>
-					<p id="beta_bp"></p>
-					<p id="gamma_bp"></p>
-				</div>
+		<tr>
+			<td>
+			<div class="form-row py-1" id="window_manipulation">
+				<div class="col-0"><label class="col-xs-1" style="font-size: 20px">Move window to time range (sec): </label></div>
+				<div class="col-2"><input type=number id="window_start" class="form-control window_control"></div>
+				<div class="col-0"><label class="col-xs-1" style="font-size: 20px">to</label></div>
+				<div class="col-2"><input type=number id="window_end" class="form-control window_control"></div>
+				<div class="col-0"><button id="window_button" class="btn btn-primary">Enter</button></div>
+			</div>
+			<div class="form-row py-1">
+				<div class="col-xs-"><div class="alert alert-danger" role="alert" id="window_alert" style="display:none;"></div></div>
+			</div>
 			</td>
-			<td></td>
+		</tr>
 		</tr>
 	</table>
-
-
 </body>
+
+
+<footer class="footer">
+	<hr>
+	<p>&copy; UA HTIL 2021</p>
+</footer>
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script> <!-- jQuery-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script> <!-- Popper -->

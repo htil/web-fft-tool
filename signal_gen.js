@@ -1,36 +1,19 @@
 function draw(data, freq) {
-	// TODO: Make this function compatible with any dataset..
-  // Extract data and channel name
-  /*
-  let data = d.value;
-  let channel = d.channel;
-
-  d3.select("#title")
-    .text(channel)
-    .attr("transform", "translate(" + width / 2 + ", 0)");
-    */
-
-	//	console.log("in draw");
   var svg = d3.select("svg"),
-    margin = { top: 20, right: 20, bottom: 170, left: 60 },
-    margin2 = { top: 430, right: 20, bottom: 50, left: 60 },
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom,
-    height2 = +svg.attr("height") - margin2.top - margin2.bottom;
+    margin = {top: 10, right: 30, bottom: 50, left: 60},
+    width = 800 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
   var x = d3.scaleLinear().range([0, width]),
-    x2 = d3.scaleLinear().range([0, width]),
-    y = d3.scaleLinear().range([height, 0]),
-    y2 = d3.scaleLinear().range([height2, 0]);
+    y = d3.scaleLinear().range([height, 0]);
 
   var xAxis = d3.axisBottom(x),
-    xAxis2 = d3.axisBottom(x2),
     yAxis = d3.axisLeft(y);
 
 	svg.append("text")             
 		.attr("transform",
 				"translate(" + (width/2) + " ," + 
-												(height + margin.bottom + 10) + ")")
+												(height + margin.top + 30) + ")")
 		.style("text-anchor", "middle")
 		.text("Time (s)");
 
@@ -51,14 +34,6 @@ function draw(data, freq) {
     ])
     .on("brush end", brushed);
 
-  // The brush for the context (zooming)
-  var brush2 = d3
-    .brushX()
-    .extent([
-      [0, 0],
-      [width, height2],
-    ])
-    .on("brush end", brushedZoom);
 
   var line = d3
     .line()
@@ -67,15 +42,6 @@ function draw(data, freq) {
     })
     .y(function (d) {
       return y(d.amplitude);
-    });
-
-  var line2 = d3
-    .line()
-    .x(function (d) {
-      return x2(d.time);
-    })
-    .y(function (d) {
-      return y2(d.amplitude);
     });
 
   var clip = svg
@@ -99,23 +65,14 @@ function draw(data, freq) {
     .attr("class", "focus")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  var context = svg
-    .append("g")
-    .attr("class", "context")
-    .attr("transform", "translate(" + margin2.left + "," + margin2.top + ")");
-
   x.domain(
     d3.extent(data, function (d) {
       return d.time;
     })
   );
   y.domain(
-    d3.extent(data, function (d) {
-      return d.amplitude;
-    })
+    [-10*max_signal, 10*max_signal]
   );
-  x2.domain(x.domain());
-  y2.domain(y.domain());
 
   focus
     .append("g")
@@ -125,9 +82,6 @@ function draw(data, freq) {
 
   focus.append("g").attr("class", "axis axis--y").call(yAxis);
 
-  //let min = x.domain()[0];
-  //let range = x.domain()[1] - x.domain()[0];
-  //let offset = range * 0.1;
   focus
     .append("g")
     .attr("class", "brush")
@@ -135,20 +89,6 @@ function draw(data, freq) {
     .call(brush.move, x.range());
 
   Line_chart.append("path").datum(data).attr("class", "line").attr("d", line);
-
-  context.append("path").datum(data).attr("class", "line").attr("d", line2);
-
-  context
-    .append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + height2 + ")")
-    .call(xAxis2);
-
-  context
-    .append("g")
-    .attr("class", "brush2")
-    .call(brush2)
-    .call(brush2.move, x.range());
 
   // Event listeners to move the brush
   d3.select("#window_button").on("click", moveBrush);
@@ -173,8 +113,6 @@ function draw(data, freq) {
       start = parseFloat(start);
       end = parseFloat(end);
     }
-    //console.log(`start: ${start}  end: ${end}`);
-    //console.log(`typeof start: ${typeof start}  typeof end: ${typeof end}`);
 
     var msg;
     if (!valid) {
@@ -234,31 +172,14 @@ function draw(data, freq) {
       var windowData = aData.slice(lower, upper + 1);
       //console.log(windowData.length);
 
-      // Output the length/range of the window
-      document.getElementById("window_len").innerText = `Window length: ${(time_range[1] - time_range[0]).toFixed(3)} seconds`;
-      document.getElementById("window_range").innerText = `Window range: ${time_range[0].toFixed(3)} sec to ${time_range[1].toFixed(3)} sec`;
-
       // Update the time range input boxes (if brush is dragged)
       document.getElementById("window_start").value = time_range[0].toFixed(3);
       document.getElementById("window_end").value = time_range[1].toFixed(3);
 
-      // TODO: Add code for calculation FFTs, Bandpower, Visualizations, etc using the windowData...
-      let bandpower = bci.bandpower(windowData, freq, [
-        "delta",
-        "theta",
-        "alpha",
-        "beta",
-        "gamma",
-      ]);
-      document.getElementById("delta_bp").innerText = `Delta Bandpower: ${bandpower[0].toFixed(3)}`;
-      document.getElementById("theta_bp").innerText = `Theta Bandpower: ${bandpower[1].toFixed(3)}`;
-      document.getElementById("alpha_bp").innerText = `Alpha Bandpower: ${bandpower[2].toFixed(3)}`;
-      document.getElementById("beta_bp").innerText = `Beta Bandpower: ${bandpower[3].toFixed(3)}`;
-      document.getElementById("gamma_bp").innerText = `Gamma Bandpower: ${bandpower[4].toFixed(3)}`;
 
-	  // FFT STUFF?????????????????????????????????????????????????
+	  // Do the FFT
 			doFFT(windowData, freq);
-	  //?????????????????????????????????????????????????????????????????????
+
     } else {
 			$("#window_alert").text("Please select a nonzero window size.");
 			$("#window_alert").show();
@@ -266,22 +187,6 @@ function draw(data, freq) {
     }
   }
 
-  function brushedZoom() {
-    if (d3.event.sourceEvent && d3.event.sourceEvent.type === "zoom") return; // ignore brush-by-zoom
-    var s = d3.event.selection || x2.range();
-    x.domain(s.map(x2.invert, x2));
-    Line_chart.select(".line").attr("d", line);
-    focus.select(".axis--x").call(xAxis);
-
-    let min = x.domain()[0];
-    let range = x.domain()[1] - x.domain()[0];
-    let offset = range * 0.1;
-    d3.select(".brush").call(brush.move, x.range());
-    $(".window_control").attr({
-      max: x.domain()[1],
-      min: x.domain()[0],
-    });
-  }
 
 } // End of draw()
 
@@ -302,7 +207,7 @@ function doFFT(data, Fs){
 	// Calculate magnitudes, divide by N
 	let mag = fft.amplitude(real, imaginary);
 	mag = mag.map(x => x/data.length);
-	mag = mag.map(x => 20*Math.log10(Math.abs(x)));
+	//mag = mag.map(x => 20*Math.log10(Math.abs(x)));
 
 	// Create the dataset for the d3 chart
 	fftData = [];
@@ -330,7 +235,7 @@ function drawFFT(data_fft){
 	// set the dimensions and margins of the graph
 	var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
 	width_fft = 800 - margin_fft.left - margin_fft.right,
-	height_fft = 550 - margin_fft.top - margin_fft.bottom;
+	height_fft = 400 - margin_fft.top - margin_fft.bottom;
 
 	// append the svg object to the body of the page
 	var svg_fft = d3.select("#fft_plot")
@@ -359,7 +264,7 @@ function drawFFT(data_fft){
 	svg_fft.append("text")             
 		.attr("transform",
 				"translate(" + (width_fft/2) + " ," + 
-												(height_fft + margin_fft.top + 30) + ")")
+												(height_fft + margin_fft.top + 25) + ")")
 		.style("text-anchor", "middle")
 		.text("Frequency (Hz)");
 
@@ -468,43 +373,19 @@ function drawRawFromFile(file, freq) {
       // Remove and then redraw the plot
       d3.select("svg").remove();
       //TODO: Don't hard code this in.. Get the HTML
-      document.getElementById("plot").innerHTML = "<svg width='800' height='550'></svg>";
+      document.getElementById("plot").innerHTML = "<svg width='800' height='400'></svg>";
       draw(allData[selectedOption].value, freq);
     });
   });
 }
 
-//TODO: Add an option to generate a signal and then draw it
-
-//drawRawFromFile("A114_raw_512Hz.csv", 512);
-//drawRawFromFile("sine_wave3_10Hz.csv", 1000);
-/*
-// Generate 1 second of sample data
-let sampleRate = 512;
-let duration = 10;
-let amplitudes = [10, 4, 2, 1];
-let frequencies = [
-	 1,// Hz, delta range
-	5, // 5 Hz, theta range
-	8, // 8 Hz, alpha range
-	17 // 17 Hz, beta range
-];
-
-let signal = bci.generateSignal(amplitudes, frequencies, sampleRate, duration);
-var gen = convertToD3Data(signal, sampleRate);
-
-draw(gen, sampleRate);
-*/
-
 function convertToD3Data(d, freq) {
   let result = [];
-  //let t = 0;
   for (let i = 0; i < d.length; i++) {
     result.push({
       amplitude: d[i],
       time: i/freq,
     });
-    //t += 1 / freq;
   }
   return result;
 }
@@ -516,22 +397,19 @@ function drawWave(){
 
 	var amp = $('.amp_value').map((_,el) => el.value).get();
 	var freq = $('.freq_value').map((_,el) => el.value).get();
-	//console.log(amp);
-	//console.log(freq);
-  //amp = parseInt(amp);
-  //let freq = [$("#frequencyInput1").val()];
-  //freq = parseInt(freq);
+
   let signal = bci.generateSignal(amp, freq, sampleRate, duration);
   var gen = convertToD3Data(signal, sampleRate);
   d3.select("svg").remove();
   //TODO: Don't hard code this in.. Get the HTML
-  document.getElementById("plot").innerHTML = "<svg width='800' height='550'></svg>";
-	//console.log("in drawWave");
+  document.getElementById("plot").innerHTML = "<svg width='800' height='400'></svg>";
+
   draw(gen, sampleRate);
 }
 
 var regex = /^(.+?)(\d+)$/i;
 var cloneIndex = $(".clonedInput").length+1;
+var max_signal = 5;
 function clone(){
 		$("#clonedInput1").clone()
         .appendTo("#signal_gen")
@@ -546,7 +424,7 @@ function clone(){
 						}
 						if(this.id.includes("amplitudeRange")){
 							//this.attributes.onchange.nodeValue = `$('#amplitudeInput${cloneIndex}').val(this.value)`;
-							$(this).val(10);
+							$(this).val(5);
 							$(this).attr("onchange", `$('#amplitudeInput${cloneIndex}').val(this.value); drawWave();`);
 						}
 						if(this.id.includes("frequencyRange")){
@@ -554,7 +432,7 @@ function clone(){
 							$(this).attr("onchange", `$('#frequencyInput${cloneIndex}').val(this.value); drawWave();`);
 						}
 						if(this.id.includes("amplitudeInput")){
-							$(this).val(10);
+							$(this).val(5);
 							$(this).attr("onchange", `$('#amplitudeRange${cloneIndex}').val(this.value); drawWave();`);
 						}
 						if(this.id.includes("frequencyInput")){
@@ -564,17 +442,14 @@ function clone(){
 						if(this.id.includes("removeButton")){
 							$(this).show();
 						}
-						//ADD if this.id = slider/text onchange = 
             var id = this.id || "";
             var match = id.match(regex) || [];
             if (match.length == 3) {
                 this.id = match[1] + (cloneIndex);
             }
         })
-        //.on('click', 'button.clone', clone)
         .on('click', 'button.remove', remove);
     cloneIndex++;
-		//console.log("done clone");
 }
 function remove(){
 		if($(this).attr('id') === "removeButton1") return;
@@ -586,13 +461,12 @@ $("button.clone").on("click", add_signal);
 $("button.remove").on("click", remove);
 
 function add_signal(){
+  if($(".clonedInput").length == max_signal) return;
 	clone();
 	drawWave();
 }
 
 drawWave();
 
-//TODO: add way to set max fft freq
-//TODO: Bandpass filter? Downsampling?
 
 
