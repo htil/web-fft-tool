@@ -448,13 +448,12 @@ function clone(){
                 this.id = match[1] + (cloneIndex);
             }
         })
-        .on('click', 'button.remove', remove);
+        .on('click', 'button.remove', remove)
     cloneIndex++;
 }
 function remove(){
 		if($(this).attr('id') === "removeButton1") return;
     $(this).parents(".clonedInput").remove();
-		//cloneIndex--;
 		drawWave();
 }
 $("button.clone").on("click", add_signal);
@@ -464,6 +463,38 @@ function add_signal(){
   if($(".clonedInput").length == max_signal) return;
 	clone();
 	drawWave();
+}
+
+$('#advanced_options').on('change', 'input.signal_control', function() {
+	if(parseInt($(this).val()) > parseInt($(this).attr('max'))){
+		$("#signal_gen_alert").show();
+		$("#signal_gen_alert").text(`Current value ${$(this).val()} exceeds the maximum of ${$(this).attr('max')}`);
+	}
+	else if(parseInt($(this).val()) < parseInt($(this).attr('min'))){
+		$("#signal_gen_alert").show();
+		$("#signal_gen_alert").text(`Current value ${$(this).val()} is below the minimum of ${$(this).attr('min')}`);
+	}
+	else{
+		$("#signal_gen_alert").hide();
+	}
+});
+
+function toggle_advanced(){
+	if($('#adv_opt_check').is(":checked")){
+		$('#advanced_options').show(); 
+		$(".freq").attr("max", 511);
+	}
+	else{
+		$('#advanced_options').hide(); 
+		$(".freq").attr("max", 255);
+		$('.freq').each(function(i, obj) {
+			if($(this).val() > 255) $(this).val(255);
+		});
+		$("#sampleRateInput").val(512);
+		$("#sampleRateRange").val(512);
+		$("#signalDurationInput").val(1);
+		drawWave();
+	}
 }
 
 drawWave();
