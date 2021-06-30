@@ -16,7 +16,7 @@ Feel free to add ideas to the To-do List!
 - [x] Add ability to generate signal using bci.js
 - [x] Amplitude slider/input
 - [x] Frequency slider/input
-- [ ] Verification of text input
+- [x] Verification of text input
 - [ ] Different kinds of waveforms (square, sawtooth, triangle, etc)
 #### Research Tool
 - [ ] Add ability to upload .csv file
