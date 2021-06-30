@@ -1,5 +1,5 @@
 # web-fft-tool
-A website designed to teach students about Fast Fourier Transforms. Includes an educational module and interactive FFT visualization tool. Also contains an additional tool 
+A website designed to teach students about Fast Fourier Transforms. Includes an educational module and interactive FFT visualization tool. Also contains an additional tool to upload your own data.
 
 Feel free to add ideas to the To-do List!
 
