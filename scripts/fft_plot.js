@@ -1,8 +1,9 @@
-function draw(d, freq) {
+function draw(d) {
 	// TODO: Make this function compatible with any dataset..
   // Extract data and channel name
   let data = d.value;
   let channel = d.channel;
+  let freq = parseInt($("#sampling_freqency").val());
 
   d3.select("#title")
     .text(channel)
@@ -448,7 +449,9 @@ function findClosestIdx(val, arr) {
  * @param {string} file - the .csv file you wish to read in
  * @param {number} freq - the sampling frequency of the data
  */
-function drawRawFromFile(file, freq) {
+function drawRawFromFile(file) {
+  $("#data_loaded").show();
+
   d3.csv(file, function (error, data) {
     if (error) throw error;
     // Parse out channel names
@@ -458,10 +461,11 @@ function drawRawFromFile(file, freq) {
     updateDropdown(channelNames);
 
     // Get the EEG Data from the .csv file
+    let freq = parseInt($("#sampling_freqency").val());
     var allData = getEEGData(channelNames, data, freq);
 
     // Plot the first channel's data
-    draw(allData[0], freq);
+    draw(allData[0]);
 
     // Dropdown change behavior
     d3.select("#dropdown").on("change", function (d) {
@@ -472,13 +476,12 @@ function drawRawFromFile(file, freq) {
       d3.select("svg").remove();
       //TODO: Don't hard code this in.. Get the HTML
       document.getElementById("plot").innerHTML = "<svg width='1200' height='550'></svg>";
-      draw(allData[selectedOption], freq);
+      draw(allData[selectedOption]);
     });
+
   });
 }
 
 //TODO: Bandpass filtering? https://github.com/markert/fili.js
 
-//drawRawFromFile("data/A114_raw_512Hz.csv", 512);
-//drawRawFromFile("sine_wave3_10Hz.csv", 1000);
-drawRawFromFile("data/righthand-testing.csv", 250);
+//drawRawFromFile("data/righthand-testing.csv");

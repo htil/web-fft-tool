@@ -14,66 +14,111 @@
 		}
 
 	body {
-		margin: 10px;
+		padding-left: 10px;
+		padding-right: 10px;
+		padding-top: 60px;
 	}
 	</style>
 </head>
 
 <body>
-	<h1>EEG Raw Plot</h1>
-	<h5>You can resize the sliding window by clicking on the edges. Move window left to right to select a new subset of data.</h5>
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+		<div class="container-fluid">
+		  <a class="navbar-brand" href="#">Web FFT</a>
+		  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		  </button>
+		  <div class="collapse navbar-collapse" id="navbarCollapse">
+			<ul class="navbar-nav me-auto mb-2 mb-md-0">
+			  <li class="nav-item">
+				<a class="nav-link" href="index.html">Home</a>
+			  </li>
+			  <li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="learn_fft.html">Learn</a>
+				<div class="dropdown-menu" aria-labelledby="dropdown01">
+				  <a class="dropdown-item" href="learn_fft.html">What is an FFT?</a>
+				  <a class="dropdown-item" href="learn_freq_amp.html">Frequency and Amplitude</a>
+				</div>
+			  </li>
+			  <li class="nav-item">
+				<a class="nav-link" href="signal_gen.html">Play</a>
+			  </li>
+			</ul>
+		  </div>
+		  <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+				<a class="nav-link active" href="fft_plot.html">Researchers</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="https://github.com/htil/eeg-web-viz"><i class="fab fa-github"></i>&nbspGithub Repo</a>
+			</li>
+          </ul>
+		</div>
+	  </nav>
 
-	<div>
-		<div class="form-row py-1">
-			<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">Select Channel: </label></div>
-			<div class="col-xs-"><select id="dropdown" class="form-select"></select></div>
+
+	<h1>Fast Fourier Transform Plot</h1>
+	<div class="file-upload-wrapper">
+		<input type="file" id="input-file-now" class="file-upload" />
+	  </div>
+
+
+	<div id="data_loaded" style="display:none;"">
+		<h5>You can resize the sliding window by clicking on the edges. Move window left to right to select a new subset of data.</h5>
+		<div id="graph_control">
+			<div class="form-row py-1">
+				<div class="col-0"><label style="font-size: 20px">Select Column: </label></div>
+				<div class="col-0"><select id="dropdown" class="form-control"></select></div>
+				<div class="col-0"><label style="font-size: 20px">&nbsp&nbsp&nbspSampling Frequency: </label></div>
+				<div class="col-0"><div class="col-xs-"><input type=number id="sampling_freqency" class="form-control sampleFreq" value="250"></div></div>
+			</div>
+			<div class="form-row py-1">
+				<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">Move window to time range (sec): </label></div>
+				<div class="col-xs-"><input type=number id="window_start" class="form-control window_control"></div>
+				<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">to</label></div>
+				<div class="col-xs-"><input type=number id="window_end" class="form-control window_control"></div>
+				<div class="col-xs-"><button id="window_button" class="btn btn-primary">Enter</button></div>
+			</div>
+			<div class="form-row py-1">
+				<div class="col-xs-"><div class="alert alert-danger" role="alert" id="window_alert" style="display:none;"></div></div>
+			</div>
 		</div>
-		<div class="form-row py-1">
-			<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">Move window to time range (sec): </label></div>
-			<div class="col-xs-"><input type=number id="window_start" class="form-control window_control"></div>
-			<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">to</label></div>
-			<div class="col-xs-"><input type=number id="window_end" class="form-control window_control"></div>
-			<div class="col-xs-"><button id="window_button" class="btn btn-primary">Enter</button></div>
-		</div>
-		<div class="form-row py-1">
-			<div class="col-xs-"><div class="alert alert-danger" role="alert" id="window_alert" style="display:none;"></div></div>
+		<div id = "graphs">
+			<div class="form-row py-1">
+				<div class="col-auto">
+					<div class="form-row py-1"><h2 id="title">Raw Signal</h2></div>
+					<div id="plot" class="plot">
+						<svg width="1200" height="550" id="svg1"></svg>
+					</div>
+				</div>
+				<div class="col-auto">
+					<div class="form-row py-1"><h2 id="title">FFT Graph</h2></div>
+					<div id="fft_div">
+						<div id = "fft_plot"></div>
+					</div>
+				</div>
+			</div>
+			<div class="form-row py-1">
+				<div class="col-auto">
+					<div class="form-row py-1"><h2>Output</h2></div>
+					<div id="output">
+						<p id="window_len"></p>
+						<p id="window_range"></p>
+						<p id="delta_bp"></p>
+						<p id="theta_bp"></p>
+						<p id="alpha_bp"></p>
+						<p id="beta_bp"></p>
+						<p id="gamma_bp"></p>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
-
-	<table cellpadding="15">
-		<tr>
-			<td>
-				<h2 id="title">Channel Name</h2>
-				<div id="plot" class="plot">
-					<svg width="1200" height="550" id="svg1"></svg>
-				</div>
-			</td>
-			<td>
-				<h2>FFT</h2>
-				<div id="fft_div">
-					<div id = "fft_plot"></div>
-				</div>
-			</td>
-			
-		</tr>
-		<tr>
-			<td valign="top" style="border-left : 5px solid blue; "">
-				<h2>Output</h2>
-				<div id="output">
-					<p id="window_len"></p>
-					<p id="window_range"></p>
-					<p id="delta_bp"></p>
-					<p id="theta_bp"></p>
-					<p id="alpha_bp"></p>
-					<p id="beta_bp"></p>
-					<p id="gamma_bp"></p>
-				</div>
-			</td>
-			<td></td>
-		</tr>
-	</table>
-
+	<footer class="footer">
+        <hr>
+        <p>&copy; UA HTIL 2021</p>
+    </footer>
 
 </body>
 

@@ -1,2 +1,4 @@
 # Ignore .csv files
 *.csv
+backups/
+data/
