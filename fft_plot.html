@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	 <!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
 	<link rel="stylesheet" href="styles/fft_plot.css">
 
@@ -36,7 +36,7 @@
 		  </div>
 		  <ul class="nav navbar-nav navbar-right">
             <li class="nav-item">
-				<a class="nav-link active" href="fft_plot.html">Researchers</a>
+				<a class="nav-link active" href="fft_plot.html">Advanced FFT Plot</a>
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="https://github.com/htil/eeg-web-viz"><i class="fab fa-github"></i>&nbspGithub Repo</a>
@@ -59,7 +59,7 @@
 			<div class="image-upload-wrap">
 				<input class="file-upload-input" type='file' id="txtFileUpload" onchange="disp_filename()" accept=".csv" />
 				<div class="drag-text">
-					<h3 id="file_upload_txt"><i class="fas fa-cloud-upload-alt fa-3x" style="padding-bottom: 10px"></i><br>Drag and drop or click to upload a file</h3>
+					<h3 id="file_upload_txt"><i class="fas fa-cloud-upload-alt fa-3x" style="padding-bottom: 10px"></i><br>Drag and drop or click to upload a .csv file</h3>
 				</div>
 			</div>
 			<div id="after_file" style="display:none;">
@@ -68,7 +68,7 @@
 				</div>
 				<div class="form-row py-1">
 					<div class="col-auto"><h4>Sampling Frequency: </h4></div>
-					<div class="col-auto"><div class="col-xs-"><input type=number id="sampling_freqency" class="form-control redraw"></div></div>
+					<div class="col-auto"><div class="col-xs-"><input type=number id="sampling_freqency" class="form-control" value="0"></div></div>
 				</div>
 				<button class="file-upload-btn" type="button" onclick="loadFile()">Submit</button>
 			<!--button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Upload File Here</button-->
