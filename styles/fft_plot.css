@@ -23,7 +23,7 @@ body {
   }
   
   .file-upload-btn {
-    width: 100%;
+    width: 600px;
     margin: 0;
     color: #fff;
     background: #b6b6b6;
@@ -69,6 +69,9 @@ body {
     margin-bottom: 20px;
     border: 4px dashed #8a8a8a;
     position: relative;
+    width: 600px;
+    height: 300px;
+    padding: 5px;
   }
   
   .image-dropping,
@@ -88,41 +91,7 @@ body {
   
   .drag-text h3 {
     font-weight: 100;
-    text-transform: uppercase;
     color: #616161;
-    padding: 60px 0;
+    padding: 60px 10px;
   }
   
-  .file-upload-image {
-    max-height: 200px;
-    max-width: 200px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  .remove-image {
-    width: 200px;
-    margin: 0;
-    color: #fff;
-    background: #cd4535;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    border-bottom: 4px solid #b02818;
-    transition: all .2s ease;
-    outline: none;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  
-  .remove-image:hover {
-    background: #c13b2a;
-    color: #ffffff;
-    transition: all .2s ease;
-    cursor: pointer;
-  }
-  
-  .remove-image:active {
-    border: 0;
-    transition: all .2s ease;
-  }

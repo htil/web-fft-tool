@@ -1,9 +1,9 @@
-function draw(d) {
+function draw(d, freq) {
 	// TODO: Make this function compatible with any dataset..
   // Extract data and channel name
   let data = d.value;
   let channel = d.channel;
-  let freq = parseInt($("#sampling_freqency").val());
+  
 
   d3.select("#title")
     .text(channel)
@@ -389,7 +389,7 @@ function drawFFT(data_fft){
 			)
 }
 
-function getChannelData(channel, data, freq) {
+function getColumnData(channel, data, freq) {
   let d = data.map((a) => a[channel]).map(Number);
   let result = [];
   let t = 0;
@@ -403,22 +403,20 @@ function getChannelData(channel, data, freq) {
   return result;
 }
 
-function getEEGData(channelNames, data, freq) {
+function addTimeData(columnNames, data, freq) {
   let d = [];
-  for (let i = 0; i < channelNames.length; i++) {
-    let channelData = getChannelData(channelNames[i], data, freq);
-    //console.log(channelNames[i]);
-    //console.log(channelData);
-    d.push({ channel: channelNames[i], value: channelData });
+  for (let i = 0; i < columnNames.length; i++) {
+    let channelData = getColumnData(columnNames[i], data, freq);
+    d.push({ channel: columnNames[i], value: channelData });
   }
   return d;
 }
 
-function updateDropdown(channelNames) {
+function updateDropdown(columnNames) {
   var i = 0;
   d3.select("#dropdown")
     .selectAll("myOptions")
-    .data(channelNames)
+    .data(columnNames)
     .enter()
     .append("option")
     .text(function (d) {
@@ -487,8 +485,21 @@ function drawRawFromFile(file) {
 
 
 var reader = new FileReader();  
+
+function disp_filename(){
+  let filepath = $("#txtFileUpload").val();
+  var filename = /([^\\]+)$/.exec(filepath)[1];
+  $("#finput_txt").html("&nbspUploaded file: <i class='fas fa-file-csv' style='padding-bottom: 10px'></i>&nbsp"+filename);
+  $("#after_file").show();
+}
     
-function loadFile() {      
+function loadFile() {  
+  let freq = parseInt($("#sampling_freqency").val());
+  if((freq < 128)){
+    alert("Invalid or empty sampling frequency! Please input a valid sampling frequency greater than 128.");
+    return;
+  }
+  
   var file = document.querySelector('input[type=file]').files[0];      
   reader.addEventListener("load", parseFile, false);
   if (file) {
@@ -496,33 +507,36 @@ function loadFile() {
   }      
 }
 
+var allData=[];
 function parseFile(){
   var data = d3.csvParse(reader.result);
-
   if(data){
+    var freq = parseInt($("#sampling_freqency").val());
     $("#data_loaded").show();
     $("#file-upload-div").hide();
   
-    var channelNames = d3.keys(data[0]);
-    console.log(channelNames);
+    var columnNames = d3.keys(data[0]);
     // Update the dropdown with the channel names
-    updateDropdown(channelNames);
+    updateDropdown(columnNames);
     // Get the EEG Data from the .csv file
-    let freq = parseInt($("#sampling_freqency").val());
-    var allData = getEEGData(channelNames, data, freq);
-        // Plot the first channel's data
-        draw(allData[0]);
+    allData = addTimeData(columnNames, data, freq);
+    // Plot the first channel's data
+    draw(allData[0], freq);
 
-        // Dropdown change behavior
-        d3.select("#dropdown").on("change", function (d) {
-          // recover the option that has been chosen
-          var selectedOption = d3.select(this).property("value");
-    
-          // Remove and then redraw the plot
-          d3.select("svg").remove();
-          //TODO: Don't hard code this in.. Get the HTML
-          document.getElementById("plot").innerHTML = "<svg width='1200' height='550'></svg>";
-          draw(allData[selectedOption]);
-        });
   }
 }
+
+
+  // Dropdown change behavior
+$("#dropdown").on("change", function (d) {
+    var freq = parseInt($("#sampling_freqency").val());
+    console.log(freq);
+    // recover the option that has been chosen
+    var selectedOption = d3.select("#dropdown").property("value");
+
+    // Remove and then redraw the plot
+    d3.select("svg").remove();
+    //TODO: Don't hard code this in.. Get the HTML
+    document.getElementById("plot").innerHTML = "<svg width='1200' height='550'></svg>";
+    draw(allData[selectedOption], freq);
+  });
