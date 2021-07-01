@@ -30,6 +30,9 @@
         bottom: 0;
         width: 100%;
       }
+      h1 {
+        text-align: center;
+      }
     </style>
   </head>
 
@@ -88,14 +91,16 @@
       </div>
     </nav>
 
-    <h1><abbr title="FFT">Fast Fourier Transform</abbr> Without Math</h1>
+    <h1>
+      <abbr title="FFT">Fast Fourier Transform</abbr> Without Complex Math
+    </h1>
     <a href="images/IMG_2756.jpeg">
       <p style="text-align: center">
         <img
           src="images/IMG_2756.jpeg"
           alt="Sound Waves"
           width="1000"
-          height="600"
+          height="200"
         /></p
     ></a>
 
@@ -103,10 +108,10 @@
     <br />
     <h2>What is an FFT?</h2>
     <p>
-      In simple terms, a mathematical algoithm that processes and computes data
-      from the original domain(often time or space) to a frequency domain. It is
-      usually used to modify or filter audio waves, images, and videos. FFT's
-      are also used to take difficult functions and simplify them.
+      In simple terms, a FFT is a mathematical algorithm that processes and
+      computes data from the original domain(often time or space) to a frequency
+      domain. It is usually used to modify or filter audio waves, images, and
+      videos. FFT's are also used to take difficult functions and simplify them.
     </p>
     <a href="images/IMG_2761.jpeg">
       <img
@@ -116,9 +121,7 @@
     </a>
 
     <br />
-    <a href="Frequency and Amplitude.html" target="__blank"
-      >Frequency and Amplitude</a
-    >
+    <a href="learn_freq_amp.html" target="__blank">Frequency and Amplitude</a>
     <h2>Why Convert from the Time Domain to Frequency?</h2>
     <p>
       In order to answer this question, we have to look at what each domain
@@ -153,7 +156,14 @@
         alt="Point of Veiw from Time Domain to Frequency"
       />
     </a>
-    <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+    <button
+      onclick="topFunction()"
+      id="myBtn"
+      class="btn btn-primary"
+      title="Go to top"
+    >
+      Top
+    </button>
     <div style="margin-top: 500px"></div>
 
     <footer>
@@ -168,4 +178,5 @@
   <!-- Popper -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <!-- Bootstrap CSS -->
+  <script src="scripts/learn_fft.js"></script>
 </html>
