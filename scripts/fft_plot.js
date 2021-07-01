@@ -335,7 +335,7 @@ function doFFT(data, Fs){
 function drawFFT(data_fft){
 	// set the dimensions and margins of the graph
 	var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
-	width_fft = 1200 - margin_fft.left - margin_fft.right,
+	width_fft = 900 - margin_fft.left - margin_fft.right,
 	height_fft = 550 - margin_fft.top - margin_fft.bottom;
 
 	// append the svg object to the body of the page
@@ -537,6 +537,6 @@ $("#dropdown").on("change", function (d) {
     // Remove and then redraw the plot
     d3.select("svg").remove();
     //TODO: Don't hard code this in.. Get the HTML
-    document.getElementById("plot").innerHTML = "<svg width='1200' height='550'></svg>";
+    document.getElementById("plot").innerHTML = "<svg width='900' height='550'></svg>";
     draw(allData[selectedOption], freq);
   });
