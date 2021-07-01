@@ -5,20 +5,9 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	 <!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<style>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css" integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+	<link rel="stylesheet" href="styles/fft_plot.css">
 
-	.line {
-			fill: none;
-			stroke: steelblue;
-			stroke-width: 1.5px;
-		}
-
-	body {
-		padding-left: 10px;
-		padding-right: 10px;
-		padding-top: 60px;
-	}
-	</style>
 </head>
 
 <body>
@@ -56,12 +45,29 @@
 		</div>
 	  </nav>
 
-
-	<h1>Fast Fourier Transform Plot</h1>
-	<div class="file-upload-wrapper">
-		<input type="file" id="input-file-now" class="file-upload" />
+	  <h1>Fast Fourier Transform Plot</h1>
+	  <div id="file-upload-div">
+		<p>
+			To get started, please upload a .csv file. To ensure that the data is parsed properly, please check that the data is organized such that each column represents
+			one dataset and the first row contains the column headers. For example, each column could represent channel, participant, trial, etc. 
+			<a href="https://github.com/htil/web-fft-tool#data-file-format">Click to view a sample file format.</a>
+		</p>
+	  <div class="file-upload">
+		<div class="image-upload-wrap">
+		  <input class="file-upload-input" type='file' id="txtFileUpload" onchange="loadFile()" accept=".csv" />
+		  <div class="drag-text">
+			<h3><i class="fas fa-cloud-upload-alt fa-3x" style="padding-bottom: 10px"></i><br>Drag and drop to upload a file</h3>
+		  </div>
+		</div>
+		<div class="file-upload-content">
+			<p><span class="image-title"></span></p>
+			<div class="image-title-wrap">
+			  <button type="button" onclick="removeUpload()" class="remove-image">Remove File</button>
+			</div>
+		  </div>
+		<button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Upload File Here</button>
 	  </div>
-
+	</div>
 
 	<div id="data_loaded" style="display:none;"">
 		<h5>You can resize the sliding window by clicking on the edges. Move window left to right to select a new subset of data.</h5>

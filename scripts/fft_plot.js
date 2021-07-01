@@ -445,10 +445,9 @@ function findClosestIdx(val, arr) {
 }
 
 /**
- * Use this function to draw a raw plot from a local .csv file.
- * @param {string} file - the .csv file you wish to read in
- * @param {number} freq - the sampling frequency of the data
+ * This function is deprecated after the addition of the load file option...
  */
+/*
 function drawRawFromFile(file) {
   $("#data_loaded").show();
 
@@ -481,7 +480,49 @@ function drawRawFromFile(file) {
 
   });
 }
-
+*/
 //TODO: Bandpass filtering? https://github.com/markert/fili.js
 
 //drawRawFromFile("data/righthand-testing.csv");
+
+
+var reader = new FileReader();  
+    
+function loadFile() {      
+  var file = document.querySelector('input[type=file]').files[0];      
+  reader.addEventListener("load", parseFile, false);
+  if (file) {
+    reader.readAsText(file);
+  }      
+}
+
+function parseFile(){
+  var data = d3.csvParse(reader.result);
+
+  if(data){
+    $("#data_loaded").show();
+    $("#file-upload-div").hide();
+  
+    var channelNames = d3.keys(data[0]);
+    console.log(channelNames);
+    // Update the dropdown with the channel names
+    updateDropdown(channelNames);
+    // Get the EEG Data from the .csv file
+    let freq = parseInt($("#sampling_freqency").val());
+    var allData = getEEGData(channelNames, data, freq);
+        // Plot the first channel's data
+        draw(allData[0]);
+
+        // Dropdown change behavior
+        d3.select("#dropdown").on("change", function (d) {
+          // recover the option that has been chosen
+          var selectedOption = d3.select(this).property("value");
+    
+          // Remove and then redraw the plot
+          d3.select("svg").remove();
+          //TODO: Don't hard code this in.. Get the HTML
+          document.getElementById("plot").innerHTML = "<svg width='1200' height='550'></svg>";
+          draw(allData[selectedOption]);
+        });
+  }
+}
