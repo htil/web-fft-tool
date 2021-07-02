@@ -37,43 +37,68 @@
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Web FFT</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-          <a class="nav-link" href="index.html">Home</a>
-          </li>
-          <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle active" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="learn_fft.html">Learn</a>
-          <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="learn_fft.html">What is an FFT?</a>
-            <a class="dropdown-item" href="learn_freq_amp.html">Frequency and Amplitude</a>
-          </div>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link" href="signal_gen.html">Play</a>
-          </li>
-        </ul>
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle active"
+                href="#"
+                id="dropdown01"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                href="learn_fft.html"
+                >Learn</a
+              >
+              <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="dropdown-item" href="learn_fft.html"
+                  >What is an FFT?</a
+                >
+                <a class="dropdown-item" href="learn_freq_amp.html"
+                  >Frequency and Amplitude</a
+                >
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="signal_gen.html">Play</a>
+            </li>
+          </ul>
         </div>
         <ul class="nav navbar-nav navbar-right">
-              <li class="nav-item">
-          <a class="nav-link" href="fft_plot.html">Advanced FFT Plot</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://github.com/htil/eeg-web-viz"><i class="fab fa-github"></i>&nbspGithub Repo</a>
-        </li>
-            </ul>
+          <li class="nav-item">
+            <a class="nav-link" href="fft_plot.html">Advanced FFT Plot</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/htil/eeg-web-viz"
+              ><i class="fab fa-github"></i>&nbspGithub Repo</a
+            >
+          </li>
+        </ul>
       </div>
-      </nav>
+    </nav>
 
     <h1>What Do We Mean When We Say Frequency and Amplitude?</h1>
     <h2>Frequency</h2>
     <p>
-      Can be measured as the <b>wavelength</b> or the distance between each peak
-      in the signal. Usually measured per second in Hertz(HZ) The rate at which
-      a vibration occurs that constitutes a wave.
+      The rate at which a vibration occurs that constitutes a wave. It can be
+      measured as the <b>wavelength</b> or the distance between each peak in the
+      signal. Usually measured per second in Hertz(HZ). Frequency is also used
+      to discover the pitch of a sound. A low pitch corresponds to a low
+      frequency wave and a high frequency wave to a high pitch.
     </p>
     <a href="images/IMG_2766.jpeg">
       <img src="images/IMG_2766.jpeg" alt="Low Frequency Wave" />
@@ -147,8 +172,9 @@
     </p>
     <h2>Super Positioning</h2>
     <p>
-      This is when you have multiple waves combine into one. This can cause the
-      amplitude to increase or decrease by however much the other amplitude was.
+      This occurs when there are mulitple waves that make up one signal. It can
+      cause the amplitude to increase or decrease by however much the other
+      signals amplitude was that is combined with said signal.
       <b>Superpositioning</b> is used in <b>FFT's</b> because reverting to the
       <b>time domain</b> from the <b>frequency domain</b> requires the multiple
       waves in a signal to combine back into one so that it can fit into the
@@ -161,18 +187,18 @@
     <p>
       In this example, you can see that Wave 1 and Wave 2 amplitudes are equal
       to 1x. They also have the same <b>frequency</b> and <b>wavelength</b>. So
-      when they are combined they the new waves amplitude is equal to 2x
+      when they are combined, the new waves amplitude is equal to 2x
     </p>
     <h4>Decreasing</h4>
     <a href="images/IMG_2783.jpeg">
       <img src="images/IMG_2783.jpeg" alt="Picture of adding Amplitude" />
     </a>
     <p>
-      In the decreasing figure we see that Wave 1 starts a positive amplitude.
-      But in figure 2 the amplitude starts out negative. Because the amplitude
-      of Wave 1 is positive where the amplitude of Wave 2 is negative they
-      cancel each other out. This forms the straight line that you see in the
-      resultant that has no amplitude.
+      In the decreasing figure, we see that Wave 1 starts off with a positive
+      amplitude. But in Wave 2 the amplitude starts out negative. Because the
+      amplitude of Wave 1 is positive where the amplitude of Wave 2 is negative
+      they cancel each other out. This forms the straight line that you see in
+      the resultant that has no amplitude or an amplitdue equal to 0
     </p>
 
     <footer>

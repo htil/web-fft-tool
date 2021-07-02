@@ -40,36 +40,59 @@
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Web FFT</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarCollapse"
+          aria-controls="navbarCollapse"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
-        <ul class="navbar-nav me-auto mb-2 mb-md-0">
-          <li class="nav-item">
-          <a class="nav-link" href="index.html">Home</a>
-          </li>
-          <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle active" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="learn_fft.html">Learn</a>
-          <div class="dropdown-menu" aria-labelledby="dropdown01">
-            <a class="dropdown-item" href="learn_fft.html">What is an FFT?</a>
-            <a class="dropdown-item" href="learn_freq_amp.html">Frequency and Amplitude</a>
-          </div>
-          </li>
-          <li class="nav-item">
-          <a class="nav-link" href="signal_gen.html">Play</a>
-          </li>
-        </ul>
+          <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Home</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle active"
+                href="#"
+                id="dropdown01"
+                data-toggle="dropdown"
+                aria-haspopup="true"
+                aria-expanded="false"
+                href="learn_fft.html"
+                >Learn</a
+              >
+              <div class="dropdown-menu" aria-labelledby="dropdown01">
+                <a class="dropdown-item" href="learn_fft.html"
+                  >What is an FFT?</a
+                >
+                <a class="dropdown-item" href="learn_freq_amp.html"
+                  >Frequency and Amplitude</a
+                >
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="signal_gen.html">Play</a>
+            </li>
+          </ul>
         </div>
         <ul class="nav navbar-nav navbar-right">
-              <li class="nav-item">
-          <a class="nav-link" href="fft_plot.html">Advanced FFT Plot</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="https://github.com/htil/eeg-web-viz"><i class="fab fa-github"></i>&nbspGithub Repo</a>
-        </li>
-            </ul>
+          <li class="nav-item">
+            <a class="nav-link" href="fft_plot.html">Advanced FFT Plot</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="https://github.com/htil/eeg-web-viz"
+              ><i class="fab fa-github"></i>&nbspGithub Repo</a
+            >
+          </li>
+        </ul>
       </div>
-      </nav>
+    </nav>
 
     <h1>
       <abbr title="FFT">Fast Fourier Transform</abbr> Without Complex Math
@@ -112,14 +135,20 @@
       When we view into the frequency domain we actually see that the signal
       above is actually composed of three different frequencies. It is easier to
       modify and analyze the signal when it is broken down into its most basic
-      parts. An analogy you could think of are the ingredients to a cake. It's
-      much easier to understand the properties of a cake by looking at the
-      ingredients within. Knowing that cakes are made from milk and eggs lets
-      you know that they do not stay fresh for long. Let's move to the next
-      diagram for a better example.
+      parts.
     </p>
-    <img src="img" alt="" />
-
+    <a href="images/IMG_2786.jpeg">
+      <img src="images/IMG_2786.jpeg" alt="Ingredients of a cake" />
+    </a>
+    <p>
+      An analogy you could think of are the ingredients to a cake. It's much
+      easier to understand the properties of a cake by looking at the
+      ingredients within. Knowing that cakes are made from things such as milk
+      and eggs lets you know that they do not stay fresh for long. Knowing what
+      the signals different waves are made from can give insight on where the
+      sound came from and which frequency is the loudest.
+    </p>
+    <h4>Point of View</h4>
     <p>
       In the diagram below, you can see the view of both the time domain and the
       frequency domain When viewing from the perspective of the time domain you
