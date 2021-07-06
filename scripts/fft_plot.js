@@ -1,6 +1,4 @@
 function draw(d, freq) {
-	// TODO: Make this function compatible with any dataset..
-  // Extract data and channel name
   let data = d.value;
   let channel = d.channel;
   
@@ -483,14 +481,23 @@ function drawRawFromFile(file) {
 
 //drawRawFromFile("data/righthand-testing.csv");
 
-
 var reader = new FileReader();  
 
 function disp_filename(){
   let filepath = $("#txtFileUpload").val();
-  var filename = /([^\\]+)$/.exec(filepath)[1];
-  $("#finput_txt").html("&nbspUploaded file: <i class='fas fa-file-csv' style='padding-bottom: 10px'></i>&nbsp"+filename);
-  $("#after_file").show();
+  var fileName = /([^\\]+)$/.exec(filepath)[1];
+	let fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));
+	if(fileExtension==="csv"){
+		$("#invalid_f").hide();
+		$("#finput_txt").html("&nbspUploaded file: <i class='fas fa-file-csv' style='padding-bottom: 10px'></i>&nbsp"+fileName);
+		$("#after_file").show();
+	}
+	else{
+		$("#invalid_f").text(`Error: ${fileExtension} is not a supported file type. Please upload a .csv file.`);
+		$("#invalid_f").show();
+		$("#after_file").hide();
+	}
+
 }
     
 function loadFile() {  
@@ -500,16 +507,49 @@ function loadFile() {
     return;
   }
   
-  var file = document.querySelector('input[type=file]').files[0];      
+  var file = document.querySelector('input[type=file]').files[0];  
+	reader.addEventListener('error', () => {
+		alert(`Error reading ${file.name}.`);
+	});    
   reader.addEventListener("load", parseFile, false);
   if (file) {
     reader.readAsText(file);
-  }      
+  }
+
+}
+
+
+function parseResult(result) {
+	var resultArray = [];
+	result.split("\n").forEach(function(row) {
+			var rowArray = [];
+			row.split(",").forEach(function(cell) {
+					rowArray.push(cell);
+			});
+			resultArray.push(rowArray);
+	});
+	return resultArray;
+}
+function createTable(array) {
+	var content = "";
+	array.forEach(function(row) {
+			content += "<tr>";
+			row.forEach(function(cell) {
+					content += "<td>" + cell + "</td>" ;
+			});
+			content += "</tr>";
+	});
+	$("#table_content").html(content);
+	$("#table_content").hide();
 }
 
 var allData=[];
 function parseFile(){
   var data = d3.csvParse(reader.result);
+
+	let arr = parseResult(reader.result);
+	createTable(arr);
+
   if(data){
     var freq = parseInt($("#sampling_freqency").val());
     $("#data_loaded").show();
@@ -540,3 +580,14 @@ $("#dropdown").on("change", function (d) {
     document.getElementById("plot").innerHTML = "<svg width='900' height='550'></svg>";
     draw(allData[selectedOption], freq);
   });
+
+	$("#show_data").on("change", function(){
+		if($('#show_data').is(":checked")){
+			$('#table_content').show(); 
+			$("#graphing_div").hide();
+		}
+		else{
+			$('#table_content').hide(); 
+			$("#graphing_div").show();
+		}
+	});

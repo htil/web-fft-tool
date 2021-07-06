@@ -45,8 +45,9 @@
 		</div>
 	  </nav>
 
-	  <h1>Fast Fourier Transform Plot</h1>
+
 	  <div id="file-upload-div">
+		<h1>Fast Fourier Transform Plot</h1>
 		<p>
 			To get started, please upload a .csv file. To ensure that the data is parsed properly, please check that the data is organized such that each column represents
 			one dataset and the first row contains the column headers. For example, each column could represent a channel, participant, trial, etc. 
@@ -62,12 +63,15 @@
 					<h3 id="file_upload_txt"><i class="fas fa-cloud-upload-alt fa-3x" style="padding-bottom: 10px"></i><br>Drag and drop or click to upload a .csv file</h3>
 				</div>
 			</div>
+			<div class="form-row py-1">
+				<div id="invalid_f" class="alert alert-danger" role="alert" style="display: none;">Invalid filetype uploaded. Please upload a .csv file.</div>
+			</div>
 			<div id="after_file" style="display:none;">
 				<div class="form-row py-1">
 					<h4 id="finput_txt"></h4>
 				</div>
 				<div class="form-row py-1">
-					<div class="col-auto"><h4>Sampling Frequency: </h4></div>
+					<div class="col-auto"><h4>Sampling Frequency (Hz): </h4></div>
 					<div class="col-auto"><div class="col-xs-"><input type=number id="sampling_freqency" class="form-control" value="0"></div></div>
 				</div>
 				<button class="file-upload-btn" type="button" onclick="loadFile()">Submit</button>
@@ -77,54 +81,71 @@
 	</div>
 
 	<div id="data_loaded" style="display:none;"">
-		<h5>You can resize the sliding window by clicking on the edges. Move window left to right to select a new subset of data.</h5>
-		<div id="graph_control">
-			<div class="form-row py-1">
-				<div class="col-0"><label style="font-size: 20px">Select Column: </label></div>
-				<div class="col-0"><select id="dropdown" class="form-control"></select></div>
-			</div>
-			<div class="form-row py-1">
-				<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">Move window to time range (sec): </label></div>
-				<div class="col-xs-"><input type=number id="window_start" class="form-control window_control"></div>
-				<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">to</label></div>
-				<div class="col-xs-"><input type=number id="window_end" class="form-control window_control"></div>
-				<div class="col-xs-"><button id="window_button" class="btn btn-primary">Enter</button></div>
-			</div>
-			<div class="form-row py-1">
-				<div class="col-xs-"><div class="alert alert-danger" role="alert" id="window_alert" style="display:none;"></div></div>
+		<h1>Fast Fourier Transform Plot</h1>
+		<div class="form-row">
+			<div class="col-0"><label style="font-size: 20px">Show Contents of File </label></div>
+			<div class="col-0" style="text-align: right;">
+				<label class="switch">
+					<input id="show_data" type="checkbox">
+					<span class="slider round"></span>
+				</label>
 			</div>
 		</div>
-		<div id = "graphs">
-			<div class="form-row py-1">
-				<div class="col-auto">
-					<div class="form-row py-1"><h2 id="title">Raw Signal</h2></div>
-					<div id="plot" class="plot">
-						<svg width="900" height="550" id="svg1"></svg>
-					</div>
+		<div>
+			<table id="table_content">
+			</table>
+		</div>
+		<div id="graphing_div">
+			<div id="graph_control">
+				<div class="form-row py-1">
+					<div class="col-0"><label style="font-size: 20px">Select Column: </label></div>
+					<div class="col-0"><select id="dropdown" class="form-control"></select></div>
 				</div>
-				<div class="col-auto">
-					<div class="form-row py-1"><h2 id="title">FFT Graph</h2></div>
-					<div id="fft_div">
-						<div id = "fft_plot"></div>
-					</div>
+				<div class="form-row py-1">
+					<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">Move window to time range (sec): </label></div>
+					<div class="col-xs-"><input type=number id="window_start" class="form-control window_control"></div>
+					<div class="col-xs-"><label class="col-xs-1" style="font-size: 20px">to</label></div>
+					<div class="col-xs-"><input type=number id="window_end" class="form-control window_control"></div>
+					<div class="col-xs-"><button id="window_button" class="btn btn-primary">Enter</button></div>
 				</div>
-			</div>
-			<div class="form-row py-1">
-				<div class="col-auto">
-					<div class="form-row py-1"><h2>Output</h2></div>
-					<div id="output">
-						<p id="window_len"></p>
-						<p id="window_range"></p>
-						<p id="delta_bp"></p>
-						<p id="theta_bp"></p>
-						<p id="alpha_bp"></p>
-						<p id="beta_bp"></p>
-						<p id="gamma_bp"></p>
-					</div>
+				<div class="form-row py-1">
+					<div class="col-xs-"><div class="alert alert-danger" role="alert" id="window_alert" style="display:none;"></div></div>
 				</div>
 			</div>
+			<div id = "graphs">
+				<div class="form-row py-1">
+					<div class="col-auto">
+						<div class="form-row py-1"><h2 id="title">Raw Signal</h2></div>
+						<div id="plot" class="plot">
+							<svg width="900" height="550" id="svg1"></svg>
+						</div>
+					</div>
+					<div class="col-auto">
+						<div class="form-row py-1"><h2 id="title">FFT Graph</h2></div>
+						<div id="fft_div">
+							<div id = "fft_plot"></div>
+						</div>
+					</div>
+				</div>
+				<div class="form-row py-1">
+					<div class="col-auto">
+						<div class="form-row py-1"><h2>Output</h2></div>
+						<div id="output">
+							<p id="window_len"></p>
+							<p id="window_range"></p>
+							<p id="delta_bp"></p>
+							<p id="theta_bp"></p>
+							<p id="alpha_bp"></p>
+							<p id="beta_bp"></p>
+							<p id="gamma_bp"></p>
+						</div>
+					</div>
+				</div>
 		</div>
 	</div>
+</div>
+
+
 
 	<footer class="footer">
         <hr>
