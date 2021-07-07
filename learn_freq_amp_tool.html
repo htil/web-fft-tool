@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interactive Frequency and Amplitude Tool</title>
+    <style>
+      h1 {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <h1>Frequency and Amplitude Playground</h1>
+  <h4>Instructions</h4>
+  <p>
+    In this section, you will use the interactive Frequency and Amplitude
+    playground to learn some of the basics. This will help to visualize the
+    properties that <b>frequency</b> and <b>amplitude</b> have on an graph.
+  </p>
+  <!--This is the interactivee Frequency and Amplitude Tool-->
+  <iframe
+    src="https://phet.colorado.edu/sims/html/wave-on-a-string/latest/wave-on-a-string_en.html"
+    width="800"
+    height="600"
+    scrolling="no"
+    allowfullscreen
+  ></iframe>
+  <body>
+    <hr />
+    <h1>Interactive Tool Questions</h1>
+    <h3>
+      Follow the steps and answer the questions based on your discoveries from
+      the playground. When answering these questions pay attention to the
+      different acts of motion and waves that the beads produce.
+    </h3>
+    <h5>
+      *Remeber the terms that we talked about and use those in your
+      descriptions.(wavelength, frequency, peaks etc.)
+    </h5>
+    <h4>Q1 Step 1: Set playground to <u>"Oscillate"</u></h4>
+    <h4>Q1 Step 2: Set the end of beads to <u>"No End"</u></h4>
+    <h4>Q1 Step 3: Move the Damping scale to <u>"None"</u></h4>
+
+    <form action="/action_page.php">
+      <label for="w3review"
+        >Question 1:What do you notice about the motion of the beads and the
+        waves that they create?</label
+      >
+      <textarea id="w3review" name="w3review" rows="4" cols="50"> </textarea>
+      <br /><br />
+      <h4>Q2 Step 1: Set the frequency to 3.00Hz</h4>
+
+      <label for="w3review"
+        >Question 2: What do you see differently about the motion of the beads?
+      </label>
+      <textarea id="w3review" name="w3review" rows="4" cols="50"> </textarea>
+      <br /><br />
+      <h4 style="font-weight: normal">
+        Question 2b: Is the wavelength longer or shorter than before?
+      </h4>
+      <!--Answer:Shorter-->
+      <form action="" method="post">
+        <input type="radio" name="wave" value="length" /> Longer Wavelength
+        <input type="radio" name="wave" value="length" /> Shorter Wavelength
+      </form>
+      <br /><br />
+      <h4 style="font-weight: normal">
+        Question 2c: Are the beads moving faster or slower with an increased
+        frequency?
+      </h4>
+      <!--Answer:Faster-->
+      <form action="" method="post">
+        <input type="radio" name="frequency" value="speed" /> Faster
+        <input type="radio" name="frequency" value="speed" /> Slower
+      </form>
+      <br /><br />
+      <h4>Q3 Step 1: Set the frequency to 1.00Hz</h4>
+
+      <label for="w3review"
+        >Question 3: What do you notice about the motion of the beads?
+      </label>
+      <textarea id="w3review" name="w3review" rows="4" cols="50"> </textarea>
+      <br /><br />
+      <h4 style="font-weight: normal">
+        Question 3b: Are the beads moving faster or slower with a decreased
+        frequency?
+      </h4>
+      <!--Answer:slower-->
+      <form action="" method="post">
+        <input type="radio" name="wave" value="length" /> Faster
+        <input type="radio" name="wave" value="length" /> Slower
+      </form>
+      <br /><br />
+      <h4>
+        Q4 Step 1: Now lets look at the amplitude, check the
+        <u>"Rulers"</u> box.
+      </h4>
+
+      <h4>Q4 Step 2: Now set the amplitude to 1.25</h4>
+
+      <label for="w3review"
+        >Question 4: Did this change the motion of the beads? If so, what?
+      </label>
+      <textarea id="w3review" name="w3review" rows="4" cols="50"> </textarea>
+      <br /><br />
+      <h4 style="font-weight: normal">
+        Question 4b: Did the change in amplitude affect the frequency?
+      </h4>
+      <!--Answer:slower-->
+      <form action="" method="post">
+        <input type="radio" name="yes" value="Yes" /> Yes
+        <input type="radio" name="no" value="no" /> No
+      </form>
+      <br /><br />
+
+      <label for="w3review"
+        >Question 4c: Where do the beads reach their highest point?(cm)
+      </label>
+      <textarea id="w3review" name="w3review" rows="4" cols="50"> </textarea>
+      <br /><br />
+      <h4 style="font-weight: normal">
+        Question 4c: Are the beads higher or lower than before?
+      </h4>
+      <!--Answer:slower-->
+      <form action="" method="post">
+        <input type="radio" name="Amplitude" value="Height" /> Higher
+        <input type="radio" name="Amplitude" value="Height" /> Lower
+      </form>
+      <br /><br />
+
+      <input type="submit" value="Submit" />
+    </form>
+
+    <p>
+      Click the "Submit" button and the form-data will be sent to a page on the
+      server called "action_page.php".
+    </p>
+    <a href="learn_fft.html" target="__blank">Learn FFTs</a>
+  </body>
+  <div style="margin-top: 500px"></div>
+</html>
