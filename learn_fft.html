@@ -33,6 +33,30 @@
       h1 {
         text-align: center;
       }
+      a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+      }
+
+      a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      .previous {
+        background-color: #f1f1f1;
+        color: black;
+      }
+
+      .next {
+        background-color: #04aa6d;
+        color: white;
+      }
+
+      .round {
+        border-radius: 50%;
+      }
     </style>
   </head>
 
@@ -127,7 +151,7 @@
     </a>
 
     <br />
-    <a href="learn_freq_amp.html" target="__blank">Frequency and Amplitude</a>
+
     <h2>Why Convert from the Time Domain to Frequency?</h2>
     <p>
       In order to answer this question, we have to look at what each domain
@@ -176,12 +200,12 @@
     >
       Top
     </button>
-    <div style="margin-top: 500px"></div>
 
     <footer>
       <hr />
       <p>&copy; UA HTIL 2021</p>
     </footer>
+    <a href="learn_freq_amp_tool.html" class="previous">&laquo; Previous</a>
   </body>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
