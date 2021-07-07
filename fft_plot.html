@@ -25,15 +25,9 @@
 			  <li class="nav-item dropdown">
 				<a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="learn_fft.html">Learn</a>
 				<div class="dropdown-menu" aria-labelledby="dropdown01">
-					<a class="dropdown-item" href="learn_freq_amp.html"
-					>Frequency and Amplitude</a
-				  >
-				  <a class="dropdown-item" href="learn_freq_amp_tool.html"
-					>Frequency and Amplitude Playground</a
-				  >
-				  <a class="dropdown-item" href="learn_fft.html"
-					>What is an FFT?</a
-				  >
+					<a class="dropdown-item" href="learn_freq_amp.html">Frequency and Amplitude</a>
+				  <a class="dropdown-item" href="learn_freq_amp_tool.html">Frequency and Amplitude Playground</a>
+				  <a class="dropdown-item" href="learn_fft.html">What is an FFT?</a>
 				</div>
 			  </li>
 			  <li class="nav-item">
@@ -75,11 +69,20 @@
 			</div>
 			<div id="after_file" style="display:none;">
 				<div class="form-row py-1">
-					<h4 id="finput_txt"></h4>
+					<div class="col-auto"><h4 id="finput_txt"></h4></div>
+					<div class="col-auto"><button id="modal-btn" type="button" class="btn btn-sm btn-info" data-toggle="modal" data-target="#dataModal" style="display:none;">Preview</button></div>
 				</div>
 				<div class="form-row py-1">
 					<div class="col-auto"><h4>Sampling Frequency (Hz): </h4></div>
 					<div class="col-auto"><div class="col-xs-"><input type=number id="sampling_freqency" class="form-control" value="0"></div></div>
+				</div>
+				<div class="form-row py-1">
+					<div class="col-auto">
+						<h4>Time Data in 1st Column 
+							<i class="fas fa-question-circle" data-toggle="tooltip" title="Please check the box if your .csv file contains time data in the first column. If not, time data will be generated using the sampling frequency above."></i> : &nbsp
+						</h4>
+					</div>
+					<div class="col-auto"><input id="time_check" type="checkbox" class="form-control" value="0" style="width: 30px; height: 30px;"></div>
 				</div>
 				<button class="file-upload-btn" type="button" onclick="loadFile()">Submit</button>
 			<!--button class="file-upload-btn" type="button" onclick="$('.file-upload-input').trigger( 'click' )">Upload File Here</button-->
@@ -87,23 +90,49 @@
 		</div>
 	</div>
 
+  <!-- Modal -->
+  <div class="modal fade" id="dataModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+	<div class="modal-dialog mw-100 w-75">
+	  <div class="modal-content">
+		<div class="modal-header">
+		  <h5 class="modal-title" id="modal_title">Filename goes here</h5>
+		  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		  </button>
+		</div>
+		<div class="modal-body">
+			<div id="table" class="table-editable">
+				<table id="table_content_modal" class="table table-bordered table-responsive-md">
+				</table>
+			</div>
+		</div>
+		<div class="modal-footer">
+		  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+		</div>
+	  </div>
+	</div>
+  </div>
+
+
 	<div id="data_loaded" style="display:none;">
 		<div class="form-row">
-			<div class="col"><h1>Fast Fourier Transform Plot</h1></div>
-			<div class="col-auto"><label style="font-size: 25px">Show File Contents</label></div>
-			<div class="col-auto">
+			<div class="col "><h1>Fast Fourier Transform Plot</h1></div>
+			<!-- <div class="col-auto pt-2"><label style="font-size: 25px">Show File Contents</label></div>
+			<div class="col-auto pt-2">
 				<label class="switch">
 					<input id="show_data" type="checkbox">
 					<span class="slider round"></span>
 				</label>
-			</div>
+			</div> -->
+			<div class="col-auto pt-1"><button type="button" class="btn btn-md btn-danger" data-toggle="modal" data-target="#dataModal" onClick="window.location.href=window.location.href">Start Over <i class="fas fa-sync-alt"></i></button></div>
+			<div class="col-auto pt-1"><button type="button" class="btn btn-md btn-info" data-toggle="modal" data-target="#dataModal">Preview File Contents <i class="fas fa-external-link-alt"></i></button></div>
 		</div>
 
-
+<!-- 
 		<div id="data_table" style="width:98%;overflow:auto; height:75%; position: absolute;">
 			<table id="table_content" style="width:100%;" class="table table-bordered">
 			</table>
-		</div>
+		</div> -->
 		<div id="graphing_div">
 			<div id="graph_control">
 				<div class="form-row py-1">
@@ -153,13 +182,16 @@
 			</div>
 		</div>
 	</div>
-</div>
+
 
 
 
 	<footer class="footer">
         <hr>
-        <p>&copy; UA HTIL 2021</p>
+		<div class="form-row py-1">
+			<div class="col"><p>&copy; UA HTIL 2021</p></div>
+			<div class="col-auto"><p>Powered by: <a href="https://d3js.org/">d3.js</a>, <a href="https://bci.js.org/">bci.js</a>, <a href="https://github.com/hotstaff/jquery.fft">jquery.fft</a></p></div>
+		</div>
     </footer>
 
 </body>

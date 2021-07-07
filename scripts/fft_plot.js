@@ -321,13 +321,9 @@ function doFFT(data, Fs){
 
 	// Remove and then redraw the plot
 	d3.select("#fft_plot").remove();
-	//TODO: Don't hard code this in.. Get the HTML
-	$("#fft_div").html("<div id = 'fft_plot'></div>");
+	$("#fft_div").html("<div id='fft_plot'></div>");
 
-	// Exclude the first 5 points
-	//drawFFT(fftData.slice(15));
 	drawFFT(fftData);
-
 }
 
 function drawFFT(data_fft){
@@ -387,24 +383,29 @@ function drawFFT(data_fft){
 			)
 }
 
-function getColumnData(channel, data, freq) {
+function getColumnData(channel, data, freq, time_exists, time) {
   let d = data.map((a) => a[channel]).map(Number);
   let result = [];
   let t = 0;
   for (let i = 0; i < d.length; i++) {
     result.push({
       amplitude: d[i],
-      time: t,
+      time: time_exists ? time[i]: t,
     });
     t += 1 / freq;
   }
   return result;
 }
 
-function addTimeData(columnNames, data, freq) {
+function addTimeData(columnNames, data, freq, time_exists) {
   let d = [];
-  for (let i = 0; i < columnNames.length; i++) {
-    let channelData = getColumnData(columnNames[i], data, freq);
+  let start_idx = time_exists ? 1 : 0;
+  let time_array = [];
+  if(time_exists){
+    time_array = data.map((a) => a[columnNames[0]]).map(Number);
+  }
+  for (let i = start_idx; i < columnNames.length; i++) {
+    let channelData = getColumnData(columnNames[i], data, freq, time_exists, time_array);
     d.push({ channel: columnNames[i], value: channelData });
   }
   return d;
@@ -489,15 +490,25 @@ function disp_filename(){
 	let fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));
 	if(fileExtension==="csv"){
 		$("#invalid_f").hide();
-		$("#finput_txt").html("&nbspUploaded file: <i class='fas fa-file-csv' style='padding-bottom: 10px'></i>&nbsp"+fileName);
+		$("#finput_txt").html("Uploaded file: <i class='fas fa-file-csv'></i>&nbsp"+fileName);
 		$("#after_file").show();
+    $("#modal_title").html(`${fileName} (displaying first 1000 lines)`);
 	}
 	else{
 		$("#invalid_f").text(`Error: ${fileExtension} is not a supported file type. Please upload a .csv file.`);
 		$("#invalid_f").show();
 		$("#after_file").hide();
 	}
+  $("#modal-btn").hide();
+  var file = document.querySelector('input[type=file]').files[0];  
+	reader.addEventListener('error', () => {
+		alert(`Error reading ${file.name}.`);
+	});    
 
+  reader.addEventListener("load", updateModal, false);
+  if (file) {
+    reader.readAsText(file);
+  }
 }
     
 function loadFile() {  
@@ -506,7 +517,29 @@ function loadFile() {
     alert("Invalid or empty sampling frequency! Please input a valid sampling frequency greater than 128.");
     return;
   }
+
+  var data = d3.csvParse(reader.result);
+  if(data){
+    //var freq = parseInt($("#sampling_freqency").val());
+    console.log(data);
+    $("#data_loaded").show();
+    $("#file-upload-div").hide();
   
+
+    var columnNames = d3.keys(data[0]);
+
+    let time = $('#time_check').is(":checked")? true: false;
+
+    // Get the EEG Data from the .csv file
+    allData = addTimeData(columnNames, data, freq, time);
+    if(time) columnNames.shift();
+
+    // Update the dropdown with the channel names
+    updateDropdown(columnNames);
+
+    draw(allData[0], freq);
+  }
+  /*
   var file = document.querySelector('input[type=file]').files[0];  
 	reader.addEventListener('error', () => {
 		alert(`Error reading ${file.name}.`);
@@ -515,12 +548,13 @@ function loadFile() {
   if (file) {
     reader.readAsText(file);
   }
+  */
 
 }
 
 
-function parseResult(result) {
-	var resultArray = [];
+/*function parseCSVAsArray(result) {
+	var resultArray = result;
 	result.split("\n").forEach(function(row) {
 			var rowArray = [];
 			row.split(",").forEach(function(cell) {
@@ -529,55 +563,55 @@ function parseResult(result) {
 			resultArray.push(rowArray);
 	});
 	return resultArray;
-}
+}*/
 function createTable(array) {
 	var content = "";
-  var set_col = true;
-	array.forEach(function(row) {
-    if(set_col){
+  let numRows = array.length < 1000 ? array.length : 1000;
+	//array.forEach(function(row) {
+    for(let i=0; i<numRows; i++){
+    if(i===0){
       content += "<thead class='thead-light'>"
     }
     content += "<tr>";
-    row.forEach(function(cell) {
-      if(set_col){
-        content+=`<th scope='col'>${cell}</th>`;
+    //row.forEach(function(cell) {
+      for(let j=0; j<array[i].length; j++){
+      if(i===0){
+        content+=`<th scope='col'>${array[i][j]}</th>`;
       }
       else{
-        content += "<td>" + cell + "</td>" ;
+        content += "<td>" + array[i][j] + "</td>" ;
       }
-    });
-    content += "</tr>";
-    if(set_col){
-      content += "</thead><tbody>";
-      set_col = false;
     }
-	});
+    //});
+    content += "</tr>";
+    if(i===0){
+      content += "</thead><tbody>";
+    }
+  }
+	//});
   content+="</tbody>"
-	$("#table_content").html(content);
-	$("#data_table").hide();
+	//$("#table_content").html(content);
+	//$("#data_table").hide();
+  return content;
 }
 
 var allData=[];
-function parseFile(){
-  var data = d3.csvParse(reader.result);
+function updateModal(){
 
-	let arr = parseResult(reader.result);
-	createTable(arr);
+  var data = d3.csvParseRows(reader.result);
 
-  if(data){
-    var freq = parseInt($("#sampling_freqency").val());
-    $("#data_loaded").show();
-    $("#file-upload-div").hide();
+  let content = createTable(data);
   
-    var columnNames = d3.keys(data[0]);
-    // Update the dropdown with the channel names
-    updateDropdown(columnNames);
-    // Get the EEG Data from the .csv file
-    allData = addTimeData(columnNames, data, freq);
-    // Plot the first channel's data
-    draw(allData[0], freq);
+	//let arr = parseCSVAsArray(reader.result);
+	//let content = createTable(arr);
 
-  }
+  $("#table_content_modal").html(content);
+  $("#modal-btn").show();
+//	$("#data_table").hide();
+/*
+
+
+  */
 }
 
 
@@ -605,3 +639,5 @@ $("#dropdown").on("change", function (d) {
 			$("#graphing_div").show();
 		}
 	});
+
+  $('[data-toggle="tooltip"]').tooltip();
