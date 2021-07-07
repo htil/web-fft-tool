@@ -31,6 +31,30 @@
       h1 {
         text-align: center;
       }
+      a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+      }
+
+      a:hover {
+        background-color: #ddd;
+        color: black;
+      }
+
+      .previous {
+        background-color: #f1f1f1;
+        color: black;
+      }
+
+      .next {
+        background-color: #04aa6d;
+        color: white;
+      }
+
+      .round {
+        border-radius: 50%;
+      }
     </style>
   </head>
   <body>
@@ -218,11 +242,21 @@
       Click the "Submit" button and the form-data will be sent to a page on the
       server called "action_page.php".
     </p>
-    <a href="learn_fft.html" target="__blank">Learn FFTs</a>
+
+    <button
+      onclick="topFunction()"
+      id="myBtn"
+      class="btn btn-primary"
+      title="Go to top"
+    >
+      Top
+    </button>
     <footer>
       <hr />
       <p>&copy; UA HTIL 2021</p>
     </footer>
+    <a href="learn_freq_amp.html" class="previous">&laquo; Previous</a>
+    <a href="learn_fft.html" class="next">Learn FFT &raquo;</a>
   </body>
   <div style="margin-top: 500px"></div>
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -231,4 +265,5 @@
   <!-- Popper -->
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <!-- Bootstrap CSS -->
+  <script src="scripts/learn_fft.js"></script>
 </html>
