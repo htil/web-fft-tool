@@ -23,6 +23,7 @@ For example:
 - [x] Extract raw data from sliding window
 - [x] Calculate FFT from window
 - [x] Output and graph result of FFT
+- [ ] Add citations for simulations and libraries
 - [ ] Come up with a cooler name for the repo :sunglasses:
 #### Educational tool
 - [x] Add ability to generate signal using bci.js
@@ -36,7 +37,8 @@ For example:
 - [ ] Make FFT graph interactive
   - [ ]  Display frequency/amplitude on mouseover
 - [ ]  Improve layout of statistics summary
-- [ ]  Transpose data from .csv file
+- [x]  Add feature to view data from file
+
 
 
 ---
