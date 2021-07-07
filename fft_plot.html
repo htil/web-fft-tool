@@ -87,25 +87,27 @@
 		</div>
 	</div>
 
-	<div id="data_loaded" style="display:none;"">
-		<h1>Fast Fourier Transform Plot</h1>
+	<div id="data_loaded" style="display:none;">
 		<div class="form-row">
-			<div class="col-0"><label style="font-size: 20px">Show Contents of File </label></div>
-			<div class="col-0" style="text-align: right;">
+			<div class="col"><h1>Fast Fourier Transform Plot</h1></div>
+			<div class="col-auto"><label style="font-size: 25px">Show File Contents</label></div>
+			<div class="col-auto">
 				<label class="switch">
 					<input id="show_data" type="checkbox">
 					<span class="slider round"></span>
 				</label>
 			</div>
 		</div>
-		<div>
-			<table id="table_content">
+
+
+		<div id="data_table" style="width:98%;overflow:auto; height:75%; position: absolute;">
+			<table id="table_content" style="width:100%;" class="table table-bordered">
 			</table>
 		</div>
 		<div id="graphing_div">
 			<div id="graph_control">
 				<div class="form-row py-1">
-					<div class="col-0"><label style="font-size: 20px">Select Column: </label></div>
+					<div class="col-0"><label style="font-size: 20px">Select Data Column: </label></div>
 					<div class="col-0"><select id="dropdown" class="form-control"></select></div>
 				</div>
 				<div class="form-row py-1">
@@ -148,6 +150,7 @@
 						</div>
 					</div>
 				</div>
+			</div>
 		</div>
 	</div>
 </div>

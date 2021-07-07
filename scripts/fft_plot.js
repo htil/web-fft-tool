@@ -532,15 +532,29 @@ function parseResult(result) {
 }
 function createTable(array) {
 	var content = "";
+  var set_col = true;
 	array.forEach(function(row) {
-			content += "<tr>";
-			row.forEach(function(cell) {
-					content += "<td>" + cell + "</td>" ;
-			});
-			content += "</tr>";
+    if(set_col){
+      content += "<thead class='thead-light'>"
+    }
+    content += "<tr>";
+    row.forEach(function(cell) {
+      if(set_col){
+        content+=`<th scope='col'>${cell}</th>`;
+      }
+      else{
+        content += "<td>" + cell + "</td>" ;
+      }
+    });
+    content += "</tr>";
+    if(set_col){
+      content += "</thead><tbody>";
+      set_col = false;
+    }
 	});
+  content+="</tbody>"
 	$("#table_content").html(content);
-	$("#table_content").hide();
+	$("#data_table").hide();
 }
 
 var allData=[];
@@ -583,11 +597,11 @@ $("#dropdown").on("change", function (d) {
 
 	$("#show_data").on("change", function(){
 		if($('#show_data').is(":checked")){
-			$('#table_content').show(); 
+			$('#data_table').show(); 
 			$("#graphing_div").hide();
 		}
 		else{
-			$('#table_content').hide(); 
+			$('#data_table').hide(); 
 			$("#graphing_div").show();
 		}
 	});
