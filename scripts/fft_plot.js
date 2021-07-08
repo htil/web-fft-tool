@@ -23,15 +23,15 @@ function draw(d, freq) {
     xAxis2 = d3.axisBottom(x2),
     yAxis = d3.axisLeft(y);
 
-	// Add text label for the x axis
-		svg.append("text")             
-		.attr("transform",
-				"translate(" + (width/2) + " ," + 
-												(height + margin.bottom + 10) + ")")
-		.style("text-anchor", "middle")
-		.text("Time (s)");
+  // Add text label for the x axis
+    svg.append("text")             
+    .attr("transform",
+        "translate(" + (width/2) + " ," + 
+                        (height + margin.bottom + 10) + ")")
+    .style("text-anchor", "middle")
+    .text("Time (s)");
 
-		svg.append("text")
+    svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left+55)
     .attr("x",0 - (height / 2))
@@ -212,9 +212,9 @@ function draw(d, freq) {
 
   function output(extent) {
     if (extent) {
-			// Hide the alert if it is a valid window size
-			$("#window_alert").hide();
-			$('#output').show();
+      // Hide the alert if it is a valid window size
+      $("#window_alert").hide();
+      $('#output').show();
 
       // Get lower/upper bounds of the window (time)
       var time_range = extent.map(x.invert, x);
@@ -252,13 +252,13 @@ function draw(d, freq) {
       document.getElementById("beta_bp").innerText = `Beta Bandpower: ${bandpower[3].toFixed(3)}`;
       document.getElementById("gamma_bp").innerText = `Gamma Bandpower: ${bandpower[4].toFixed(3)}`;
 
-	  // FFT STUFF?????????????????????????????????????????????????
-			doFFT(windowData, freq);
-	  //?????????????????????????????????????????????????????????????????????
+    // FFT STUFF?????????????????????????????????????????????????
+      doFFT(windowData, freq);
+    //?????????????????????????????????????????????????????????????????????
     } else {
-			$("#window_alert").text("Please select a nonzero window size.");
-			$("#window_alert").show();
-			$('#output').hide();
+      $("#window_alert").text("Please select a nonzero window size.");
+      $("#window_alert").show();
+      $('#output').hide();
     }
   }
 
@@ -282,88 +282,88 @@ function draw(d, freq) {
 } // End of draw()
 
 function magToDb(b) {
-	var ret = [];
-	for (var cnt = 0; cnt < b.length; cnt++) {
-		ret.push(20 * Math.log(b[cnt]) * Math.LOG10E);
-	}
-	return ret;
+  var ret = [];
+  for (var cnt = 0; cnt < b.length; cnt++) {
+    ret.push(20 * Math.log(b[cnt]) * Math.LOG10E);
+  }
+  return ret;
 }
 
 function doFFT(data, Fs){
-	// Set up arrays for real and imaginary components
-	var real = data;
-	var imaginary = new Array(real.length);
-	imaginary.fill(0);
+  // Set up arrays for real and imaginary components
+  var real = data;
+  var imaginary = new Array(real.length);
+  imaginary.fill(0);
 
-	// Calculate the fft
-	var fft = new FFT();
-	fft.calc(1, real, imaginary);
+  // Calculate the fft
+  var fft = new FFT();
+  fft.calc(1, real, imaginary);
 
-	// Calculate frequencies
-	let freq = fft.frequencies(real, imaginary, Fs);
+  // Calculate frequencies
+  let freq = fft.frequencies(real, imaginary, Fs);
 
-	// Calculate magnitudes, divide by N
-	let mag = fft.amplitude(real, imaginary);
-	mag = mag.map(x => x/data.length);
-	//mag = magToDb(mag);
-	//mag = mag.map(x => 20*Math.log10(Math.abs(x)));
+  // Calculate magnitudes, divide by N
+  let mag = fft.amplitude(real, imaginary);
+  mag = mag.map(x => x/data.length);
+  //mag = magToDb(mag);
+  //mag = mag.map(x => 20*Math.log10(Math.abs(x)));
 
-	// Create the dataset for the d3 chart
-	fftData = [];
-	for(let i=0; i<freq.length; i++){
-		let pt = {
-			frequency: freq[i],
-			magnitude: mag[i]
-			//magnitude: real[i]
-		}
-		fftData.push(pt);
-	}
+  // Create the dataset for the d3 chart
+  fftData = [];
+  for(let i=0; i<freq.length; i++){
+    let pt = {
+      frequency: freq[i],
+      magnitude: mag[i]
+      //magnitude: real[i]
+    }
+    fftData.push(pt);
+  }
 
-	// Remove and then redraw the plot
-	d3.select("#fft_plot").remove();
-	$("#fft_div").html("<div id='fft_plot'></div>");
+  // Remove and then redraw the plot
+  d3.select("#fft_plot").remove();
+  $("#fft_div").html("<div id='fft_plot'></div>");
 
-	drawFFT(fftData);
+  drawFFT(fftData);
 }
 
 function drawFFT(data_fft){
-	// set the dimensions and margins of the graph
-	var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
-	width_fft = 900 - margin_fft.left - margin_fft.right,
-	height_fft = 550 - margin_fft.top - margin_fft.bottom;
+  // set the dimensions and margins of the graph
+  var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
+  width_fft = 900 - margin_fft.left - margin_fft.right,
+  height_fft = 550 - margin_fft.top - margin_fft.bottom;
 
-	// append the svg object to the body of the page
-	var svg_fft = d3.select("#fft_plot")
-	.append("svg")
-	.attr("width", width_fft + margin_fft.left + margin_fft.right)
-	.attr("height", height_fft + margin_fft.top + margin_fft.bottom)
-	.append("g")
-	.attr("transform",
-				"translate(" + margin_fft.left + "," + margin_fft.top + ")");
+  // append the svg object to the body of the page
+  var svg_fft = d3.select("#fft_plot")
+  .append("svg")
+  .attr("width", width_fft + margin_fft.left + margin_fft.right)
+  .attr("height", height_fft + margin_fft.top + margin_fft.bottom)
+  .append("g")
+  .attr("transform",
+        "translate(" + margin_fft.left + "," + margin_fft.top + ")");
 
-	// Add X axis --> it is a date format
-	var x_fft = d3.scaleLinear()
-		.domain(d3.extent(data_fft, function(d) { return d.frequency; }))
-		.range([ 0, width_fft ]);
-	svg_fft.append("g")
-		.attr("transform", "translate(0," + height_fft + ")")
-		.call(d3.axisBottom(x_fft));
+  // Add X axis --> it is a date format
+  var x_fft = d3.scaleLinear()
+    .domain(d3.extent(data_fft, function(d) { return d.frequency; }))
+    .range([ 0, width_fft ]);
+  svg_fft.append("g")
+    .attr("transform", "translate(0," + height_fft + ")")
+    .call(d3.axisBottom(x_fft));
 
-	// Add Y axis
-	var y_fft = d3.scaleLinear()
-		.domain(d3.extent(data_fft, function(d) { return d.magnitude; }))
-		.range([ height_fft, 0 ]);
-	svg_fft.append("g")
-		.call(d3.axisLeft(y_fft));
+  // Add Y axis
+  var y_fft = d3.scaleLinear()
+    .domain(d3.extent(data_fft, function(d) { return d.magnitude; }))
+    .range([ height_fft, 0 ]);
+  svg_fft.append("g")
+    .call(d3.axisLeft(y_fft));
 
-	svg_fft.append("text")             
-		.attr("transform",
-				"translate(" + (width_fft/2) + " ," + 
-												(height_fft + margin_fft.top + 30) + ")")
-		.style("text-anchor", "middle")
-		.text("Frequency (Hz)");
+  svg_fft.append("text")             
+    .attr("transform",
+        "translate(" + (width_fft/2) + " ," + 
+                        (height_fft + margin_fft.top + 30) + ")")
+    .style("text-anchor", "middle")
+    .text("Frequency (Hz)");
 
-		svg_fft.append("text")
+    svg_fft.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin_fft.left)
     .attr("x",0 - (height_fft / 2))
@@ -371,16 +371,16 @@ function drawFFT(data_fft){
     .style("text-anchor", "middle")
     .text("Magnitude");   
 
-	// Add the line
-	svg_fft.append("path")
-		.datum(data_fft)
-		.attr("fill", "none")
-		.attr("stroke", "steelblue")
-		.attr("stroke-width", 1.5)
-		.attr("d", d3.line()
-			.x(function(d) { return x_fft(d.frequency) })
-			.y(function(d) { return y_fft(d.magnitude) })
-			)
+  // Add the line
+  svg_fft.append("path")
+    .datum(data_fft)
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("stroke-width", 1.5)
+    .attr("d", d3.line()
+      .x(function(d) { return x_fft(d.frequency) })
+      .y(function(d) { return y_fft(d.magnitude) })
+      )
 }
 
 function getColumnData(channel, data, freq, time_exists, time) {
@@ -487,30 +487,31 @@ var reader = new FileReader();
 function disp_filename(){
   let filepath = $("#txtFileUpload").val();
   var fileName = /([^\\]+)$/.exec(filepath)[1];
-	let fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));
-	if(fileExtension==="csv"){
-		$("#invalid_f").hide();
-		$("#finput_txt").html("Uploaded file: <i class='fas fa-file-csv'></i>&nbsp"+fileName);
-		$("#after_file").show();
+  let fileExtension = fileName.substr((fileName.lastIndexOf('.') + 1));
+  if(fileExtension==="csv"){
+    $("#invalid_f").hide();
+    $("#finput_txt").html("Uploaded file: <i class='fas fa-file-csv'></i>&nbsp"+fileName);
+    $("#after_file").show();
     $("#modal_title").html(`${fileName} (displaying first 1000 lines)`);
-	}
-	else{
-		$("#invalid_f").text(`Error: ${fileExtension} is not a supported file type. Please upload a .csv file.`);
-		$("#invalid_f").show();
-		$("#after_file").hide();
-	}
+  }
+  else{
+    $("#invalid_f").text(`Error: ${fileExtension} is not a supported file type. Please upload a .csv file.`);
+    $("#invalid_f").show();
+    $("#after_file").hide();
+  }
   $("#modal-btn").hide();
   var file = document.querySelector('input[type=file]').files[0];  
-	reader.addEventListener('error', () => {
-		alert(`Error reading ${file.name}.`);
-	});    
+  reader.addEventListener('error', () => {
+    alert(`Error reading ${file.name}.`);
+  });    
 
   reader.addEventListener("load", updateModal, false);
   if (file) {
     reader.readAsText(file);
   }
 }
-    
+ 
+var allData=[];
 function loadFile() {  
   let freq = parseInt($("#sampling_freqency").val());
   if((freq < 128)){
@@ -541,9 +542,9 @@ function loadFile() {
   }
   /*
   var file = document.querySelector('input[type=file]').files[0];  
-	reader.addEventListener('error', () => {
-		alert(`Error reading ${file.name}.`);
-	});    
+  reader.addEventListener('error', () => {
+    alert(`Error reading ${file.name}.`);
+  });    
   reader.addEventListener("load", parseFile, false);
   if (file) {
     reader.readAsText(file);
@@ -551,29 +552,15 @@ function loadFile() {
   */
 
 }
-
-
-/*function parseCSVAsArray(result) {
-	var resultArray = result;
-	result.split("\n").forEach(function(row) {
-			var rowArray = [];
-			row.split(",").forEach(function(cell) {
-					rowArray.push(cell);
-			});
-			resultArray.push(rowArray);
-	});
-	return resultArray;
-}*/
+  
 function createTable(array) {
-	var content = "";
+  var content = "";
   let numRows = array.length < 1000 ? array.length : 1000;
-	//array.forEach(function(row) {
     for(let i=0; i<numRows; i++){
     if(i===0){
       content += "<thead class='thead-light'>"
     }
     content += "<tr>";
-    //row.forEach(function(cell) {
       for(let j=0; j<array[i].length; j++){
       if(i===0){
         content+=`<th scope='col'>${array[i][j]}</th>`;
@@ -582,40 +569,30 @@ function createTable(array) {
         content += "<td>" + array[i][j] + "</td>" ;
       }
     }
-    //});
     content += "</tr>";
     if(i===0){
       content += "</thead><tbody>";
     }
   }
-	//});
+
   content+="</tbody>"
-	//$("#table_content").html(content);
-	//$("#data_table").hide();
+
   return content;
 }
 
-var allData=[];
 function updateModal(){
 
   var data = d3.csvParseRows(reader.result);
 
   let content = createTable(data);
-  
-	//let arr = parseCSVAsArray(reader.result);
-	//let content = createTable(arr);
 
   $("#table_content_modal").html(content);
   $("#modal-btn").show();
-//	$("#data_table").hide();
-/*
 
-
-  */
 }
 
 
-  // Dropdown change behavior
+// Dropdown change behavior
 $("#dropdown").on("change", function (d) {
     var freq = parseInt($("#sampling_freqency").val());
     console.log(freq);
@@ -629,15 +606,15 @@ $("#dropdown").on("change", function (d) {
     draw(allData[selectedOption], freq);
   });
 
-	$("#show_data").on("change", function(){
-		if($('#show_data').is(":checked")){
-			$('#data_table').show(); 
-			$("#graphing_div").hide();
-		}
-		else{
-			$('#data_table').hide(); 
-			$("#graphing_div").show();
-		}
-	});
+  $("#show_data").on("change", function(){
+    if($('#show_data').is(":checked")){
+      $('#data_table').show(); 
+      $("#graphing_div").hide();
+    }
+    else{
+      $('#data_table').hide(); 
+      $("#graphing_div").show();
+    }
+  });
 
   $('[data-toggle="tooltip"]').tooltip();

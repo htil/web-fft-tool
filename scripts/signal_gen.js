@@ -10,14 +10,14 @@ function draw(data, freq) {
   var xAxis = d3.axisBottom(x),
     yAxis = d3.axisLeft(y);
 
-	svg.append("text")             
-		.attr("transform",
-				"translate(" + (width/2) + " ," + 
-												(height + margin.top + 30) + ")")
-		.style("text-anchor", "middle")
-		.text("Time (s)");
+  svg.append("text")             
+    .attr("transform",
+        "translate(" + (width/2) + " ," + 
+                        (height + margin.top + 30) + ")")
+    .style("text-anchor", "middle")
+    .text("Time (s)");
 
-	svg.append("text")
+  svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left+55)
     .attr("x",0 - (height / 2))
@@ -153,9 +153,9 @@ function draw(data, freq) {
 
   function output(extent) {
     if (extent) {
-			// Hide the alert if it is a valid window size
-			$("#window_alert").hide();
-			$('#output').show();
+      // Hide the alert if it is a valid window size
+      $("#window_alert").hide();
+      $('#output').show();
 
       // Get lower/upper bounds of the window (time)
       var time_range = extent.map(x.invert, x);
@@ -178,12 +178,12 @@ function draw(data, freq) {
 
 
       // Do the FFT
-			doFFT(windowData, freq);
+      doFFT(windowData, freq);
 
     } else {
-			$("#window_alert").text("Please select a nonzero window size.");
-			$("#window_alert").show();
-			$('#output').hide();
+      $("#window_alert").text("Please select a nonzero window size.");
+      $("#window_alert").show();
+      $('#output').hide();
     }
   }
 
@@ -192,83 +192,83 @@ function draw(data, freq) {
 
 
 function doFFT(data, Fs){
-	// Set up arrays for real and imaginary components
-	var real = data;
-	var imaginary = new Array(real.length);
-	imaginary.fill(0);
+  // Set up arrays for real and imaginary components
+  var real = data;
+  var imaginary = new Array(real.length);
+  imaginary.fill(0);
 
-	// Calculate the fft
-	var fft = new FFT();
-	fft.calc(1, real, imaginary);
+  // Calculate the fft
+  var fft = new FFT();
+  fft.calc(1, real, imaginary);
 
-	// Calculate frequencies
-	let freq = fft.frequencies(real, imaginary, Fs);
+  // Calculate frequencies
+  let freq = fft.frequencies(real, imaginary, Fs);
 
-	// Calculate magnitudes, divide by N
-	let mag = fft.amplitude(real, imaginary);
-	mag = mag.map(x => x/data.length);
-	//mag = mag.map(x => 20*Math.log10(Math.abs(x)));
+  // Calculate magnitudes, divide by N
+  let mag = fft.amplitude(real, imaginary);
+  mag = mag.map(x => x/data.length);
+  //mag = mag.map(x => 20*Math.log10(Math.abs(x)));
 
-	// Create the dataset for the d3 chart
-	fftData = [];
-	for(let i=0; i<freq.length; i++){
-		let pt = {
-			frequency: freq[i],
-			magnitude: mag[i]
-			//magnitude: real[i]
-		}
-		fftData.push(pt);
-	}
+  // Create the dataset for the d3 chart
+  fftData = [];
+  for(let i=0; i<freq.length; i++){
+    let pt = {
+      frequency: freq[i],
+      magnitude: mag[i]
+      //magnitude: real[i]
+    }
+    fftData.push(pt);
+  }
 
-	// Remove and then redraw the plot
-	d3.select("#fft_plot").remove();
-	//TODO: Don't hard code this in.. Get the HTML
-	$("#fft_div").html("<div id = 'fft_plot'></div>");
+  // Remove and then redraw the plot
+  d3.select("#fft_plot").remove();
+  //TODO: Don't hard code this in.. Get the HTML
+  $("#fft_div").html("<div id = 'fft_plot'></div>");
 
-	// Exclude the first 5 points
-	drawFFT(fftData.slice(15));
-	//drawFFT(fftData);
+  // Exclude the first 5 points
+  drawFFT(fftData.slice(15));
+  //drawFFT(fftData);
 
 }
 
 function drawFFT(data_fft){
-	// set the dimensions and margins of the graph
-	var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
-	width_fft = 800 - margin_fft.left - margin_fft.right,
-	height_fft = 400 - margin_fft.top - margin_fft.bottom;
+  // set the dimensions and margins of the graph
+  var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
+  width_fft = 800 - margin_fft.left - margin_fft.right,
+  height_fft = 400 - margin_fft.top - margin_fft.bottom;
 
-	// append the svg object to the body of the page
-	var svg_fft = d3.select("#fft_plot")
-	.append("svg")
-	.attr("width", width_fft + margin_fft.left + margin_fft.right)
-	.attr("height", height_fft + margin_fft.top + margin_fft.bottom)
-	.append("g")
-	.attr("transform",
-				"translate(" + margin_fft.left + "," + margin_fft.top + ")");
+  // append the svg object to the body of the page
+  var svg_fft = d3.select("#fft_plot")
+  .append("svg")
+  .attr("width", width_fft + margin_fft.left + margin_fft.right)
+  .attr("height", height_fft + margin_fft.top + margin_fft.bottom)
+  .append("g")
+  .attr("transform",
+        "translate(" + margin_fft.left + "," + margin_fft.top + ")");
 
-	// Add X axis --> it is a date format
-	var x_fft = d3.scaleLinear()
-		.domain(d3.extent(data_fft, function(d) { return d.frequency; }))
-		.range([ 0, width_fft ]);
-	svg_fft.append("g")
-		.attr("transform", "translate(0," + height_fft + ")")
-		.call(d3.axisBottom(x_fft));
+  // Add X axis --> it is a date format
+  var x_fft = d3.scaleLinear()
+    .domain(d3.extent(data_fft, function(d) { return d.frequency; }))
+    .range([ 0, width_fft ]);
+  svg_fft.append("g")
+    .attr("transform", "translate(0," + height_fft + ")")
+    .call(d3.axisBottom(x_fft));
 
-	// Add Y axis
-	var y_fft = d3.scaleLinear()
-		.domain(d3.extent(data_fft, function(d) { return d.magnitude; }))
-		.range([ height_fft, 0 ]);
-	svg_fft.append("g")
-		.call(d3.axisLeft(y_fft));
+  // Add Y axis
+  var y_fft = d3.scaleLinear()
+    .domain(d3.extent(data_fft, function(d) { return d.magnitude; }))
+    .range([ height_fft, 0 ]);
+  svg_fft.append("g")
+    .call(d3.axisLeft(y_fft));
 
-	svg_fft.append("text")             
-		.attr("transform",
-				"translate(" + (width_fft/2) + " ," + 
-												(height_fft + margin_fft.top + 25) + ")")
-		.style("text-anchor", "middle")
-		.text("Frequency (Hz)");
+  svg_fft.append("text")             
+    .attr("transform",
+        "translate(" + (width_fft/2) + " ," + 
+                        (height_fft + margin_fft.top + 25) + ")")
+    .style("text-anchor", "middle")
+    .text("Frequency (Hz)");
 
-	svg_fft.append("text")
+  svg_fft.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin_fft.left)
     .attr("x",0 - (height_fft / 2))
@@ -276,16 +276,16 @@ function drawFFT(data_fft){
     .style("text-anchor", "middle")
     .text("Magnitude");  
 
-	// Add the line
-	svg_fft.append("path")
-		.datum(data_fft)
-		.attr("fill", "none")
-		.attr("stroke", "steelblue")
-		.attr("stroke-width", 1.5)
-		.attr("d", d3.line()
-			.x(function(d) { return x_fft(d.frequency) })
-			.y(function(d) { return y_fft(d.magnitude) })
-			)
+  // Add the line
+  svg_fft.append("path")
+    .datum(data_fft)
+    .attr("fill", "none")
+    .attr("stroke", "steelblue")
+    .attr("stroke-width", 1.5)
+    .attr("d", d3.line()
+      .x(function(d) { return x_fft(d.frequency) })
+      .y(function(d) { return y_fft(d.magnitude) })
+      )
 }
 
 function getChannelData(channel, data, freq) {
@@ -395,8 +395,8 @@ function drawWave(){
   let sampleRate = parseInt($("#sampleRateInput").val());
   let duration = parseInt($("#signalDurationInput").val());
 
-	var amp = $('.amp_value').map((_,el) => el.value).get();
-	var freq = $('.freq_value').map((_,el) => el.value).get();
+  var amp = $('.amp_value').map((_,el) => el.value).get();
+  var freq = $('.freq_value').map((_,el) => el.value).get();
 
   let signal = bci.generateSignal(amp, freq, sampleRate, duration);
   var gen = convertToD3Data(signal, sampleRate);
@@ -411,37 +411,37 @@ var regex = /^(.+?)(\d+)$/i;
 var cloneIndex = $(".clonedInput").length+1;
 var max_signal = 5;
 function clone(){
-		$("#clonedInput1").clone()
+    $("#clonedInput1").clone()
         .appendTo("#signal_gen")
         .attr("id", "clonedInput" +  cloneIndex)
         .find("*")
         .each(function() {
-						if(this.id === "ampLabel"){
-							this.innerHTML = `Amplitude ${cloneIndex}:`;
-						}
-						if(this.id === "freqLabel"){
-							this.innerHTML = `Frequency ${cloneIndex}:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`;
-						}
-						if(this.id.includes("amplitudeRange")){
-							//this.attributes.onchange.nodeValue = `$('#amplitudeInput${cloneIndex}').val(this.value)`;
-							$(this).val(5);
-							$(this).attr("onchange", `$('#amplitudeInput${cloneIndex}').val(this.value); drawWave();`);
-						}
-						if(this.id.includes("frequencyRange")){
-							$(this).val(25);
-							$(this).attr("onchange", `$('#frequencyInput${cloneIndex}').val(this.value); drawWave();`);
-						}
-						if(this.id.includes("amplitudeInput")){
-							$(this).val(5);
-							$(this).attr("onchange", `$('#amplitudeRange${cloneIndex}').val(this.value); drawWave();`);
-						}
-						if(this.id.includes("frequencyInput")){
-							$(this).val(25);
-							$(this).attr("onchange", `$('#frequencyRange${cloneIndex}').val(this.value); drawWave();`);
-						}
-						if(this.id.includes("removeButton")){
-							$(this).show();
-						}
+            if(this.id === "ampLabel"){
+              this.innerHTML = `Amplitude ${cloneIndex}:`;
+            }
+            if(this.id === "freqLabel"){
+              this.innerHTML = `Frequency ${cloneIndex}:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`;
+            }
+            if(this.id.includes("amplitudeRange")){
+              //this.attributes.onchange.nodeValue = `$('#amplitudeInput${cloneIndex}').val(this.value)`;
+              $(this).val(5);
+              $(this).attr("onchange", `$('#amplitudeInput${cloneIndex}').val(this.value); drawWave();`);
+            }
+            if(this.id.includes("frequencyRange")){
+              $(this).val(25);
+              $(this).attr("onchange", `$('#frequencyInput${cloneIndex}').val(this.value); drawWave();`);
+            }
+            if(this.id.includes("amplitudeInput")){
+              $(this).val(5);
+              $(this).attr("onchange", `$('#amplitudeRange${cloneIndex}').val(this.value); drawWave();`);
+            }
+            if(this.id.includes("frequencyInput")){
+              $(this).val(25);
+              $(this).attr("onchange", `$('#frequencyRange${cloneIndex}').val(this.value); drawWave();`);
+            }
+            if(this.id.includes("removeButton")){
+              $(this).show();
+            }
             var id = this.id || "";
             var match = id.match(regex) || [];
             if (match.length == 3) {
@@ -452,49 +452,49 @@ function clone(){
     cloneIndex++;
 }
 function remove(){
-		if($(this).attr('id') === "removeButton1") return;
+    if($(this).attr('id') === "removeButton1") return;
     $(this).parents(".clonedInput").remove();
-		drawWave();
+    drawWave();
 }
 $("button.clone").on("click", add_signal);
 $("button.remove").on("click", remove);
 
 function add_signal(){
   if($(".clonedInput").length == max_signal) return;
-	clone();
-	drawWave();
+  clone();
+  drawWave();
 }
 
 $('#advanced_options').on('change', 'input.signal_control', function() {
-	if(parseInt($(this).val()) > parseInt($(this).attr('max'))){
-		$("#signal_gen_alert").show();
-		$("#signal_gen_alert").text(`Current value ${$(this).val()} exceeds the maximum of ${$(this).attr('max')}`);
-	}
-	else if(parseInt($(this).val()) < parseInt($(this).attr('min'))){
-		$("#signal_gen_alert").show();
-		$("#signal_gen_alert").text(`Current value ${$(this).val()} is below the minimum of ${$(this).attr('min')}`);
-	}
-	else{
-		$("#signal_gen_alert").hide();
-	}
+  if(parseInt($(this).val()) > parseInt($(this).attr('max'))){
+    $("#signal_gen_alert").show();
+    $("#signal_gen_alert").text(`Current value ${$(this).val()} exceeds the maximum of ${$(this).attr('max')}`);
+  }
+  else if(parseInt($(this).val()) < parseInt($(this).attr('min'))){
+    $("#signal_gen_alert").show();
+    $("#signal_gen_alert").text(`Current value ${$(this).val()} is below the minimum of ${$(this).attr('min')}`);
+  }
+  else{
+    $("#signal_gen_alert").hide();
+  }
 });
 
 function toggle_advanced(){
-	if($('#adv_opt_check').is(":checked")){
-		$('#advanced_options').show(); 
-		$(".freq").attr("max", 511);
-	}
-	else{
-		$('#advanced_options').hide(); 
-		$(".freq").attr("max", 255);
-		$('.freq').each(function(i, obj) {
-			if($(this).val() > 255) $(this).val(255);
-		});
-		$("#sampleRateInput").val(512);
-		$("#sampleRateRange").val(512);
-		$("#signalDurationInput").val(1);
-		drawWave();
-	}
+  if($('#adv_opt_check').is(":checked")){
+    $('#advanced_options').show(); 
+    $(".freq").attr("max", 511);
+  }
+  else{
+    $('#advanced_options').hide(); 
+    $(".freq").attr("max", 255);
+    $('.freq').each(function(i, obj) {
+      if($(this).val() > 255) $(this).val(255);
+    });
+    $("#sampleRateInput").val(512);
+    $("#sampleRateRange").val(512);
+    $("#signalDurationInput").val(1);
+    drawWave();
+  }
 }
 
 drawWave();

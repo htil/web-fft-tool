@@ -1,11 +1,19 @@
 .line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }
-
 body {
-padding-left: 10px;
-padding-right: 10px;
-padding-top: 60px;
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 98%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
 }

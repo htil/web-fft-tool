@@ -1,159 +1,88 @@
 .line {
-    fill: none;
-    stroke: steelblue;
-    stroke-width: 1.5px;
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
 }
 
-body {
-padding-left: 10px;
-padding-right: 10px;
-padding-top: 60px;
+.file-upload {
+  background-color: #ffffff;
+  width: 600px;
+  margin: 0 auto;
+  padding: 5px;
 }
 
-  
-  .file-upload {
-    background-color: #ffffff;
-    width: 600px;
-    margin: 0 auto;
-    padding: 5px;
-  }
-  
-  .file-upload-btn {
-    width: 600px;
-    margin: 0;
-    color: #fff;
-    background: #b6b6b6;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    transition: all .2s ease;
-    outline: none;
-    text-transform: uppercase;
-    font-weight: 700;
-  }
-  
-  .file-upload-btn:hover {
-    background: #616161;
-    color: #ffffff;
-    transition: all .2s ease;
-    cursor: pointer;
-  }
-  
-  .file-upload-btn:active {
-    border: 0;
-    transition: all .2s ease;
-  }
-  
-  .file-upload-content {
-    display: none;
-    text-align: center;
-  }
-  
-  .file-upload-input {
-    position: absolute;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    outline: none;
-    opacity: 0;
-    cursor: pointer;
-  }
-  
-  .image-upload-wrap {
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border: 4px dashed #8a8a8a;
-    position: relative;
-    width: 600px;
-    height: 300px;
-    padding: 5px;
-  }
-  
-  .image-dropping,
-  .image-upload-wrap:hover {
-    background-color: #b6b6b6;
-    border: 4px dashed #ffffff;
-  }
-  
-  .image-title-wrap {
-    padding: 0 15px 15px 15px;
-    color: #222;
-  }
-  
-  .drag-text {
-    text-align: center;
-  }
-  
-  .drag-text h3 {
-    font-weight: 100;
-    color: #616161;
-    padding: 60px 10px;
-  }
-  
-
-	 /* The switch - the box around the slider */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+.file-upload-btn {
+  width: 600px;
+  margin: 0;
+  color: #fff;
+  background: #b6b6b6;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
-/* Hide default HTML checkbox */
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-/* The slider */
-.slider {
-  position: absolute;
+.file-upload-btn:hover {
+  background: #616161;
+  color: #ffffff;
+  transition: all 0.2s ease;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
 }
 
-.slider:before {
+.file-upload-btn:active {
+  border: 0;
+  transition: all 0.2s ease;
+}
+
+.file-upload-content {
+  display: none;
+  text-align: center;
+}
+
+.file-upload-input {
   position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  outline: none;
+  opacity: 0;
+  cursor: pointer;
 }
 
-input:checked + .slider {
-  background-color: #2196F3;
+.image-upload-wrap {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border: 4px dashed #8a8a8a;
+  position: relative;
+  width: 600px;
+  height: 300px;
+  padding: 5px;
 }
 
-input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+.image-dropping,
+.image-upload-wrap:hover {
+  background-color: #b6b6b6;
+  border: 4px dashed #ffffff;
 }
 
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+.image-title-wrap {
+  padding: 0 15px 15px 15px;
+  color: #222;
 }
 
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
+.drag-text {
+  text-align: center;
 }
 
-.slider.round:before {
-  border-radius: 50%;
-} 
+.drag-text h3 {
+  font-weight: 100;
+  color: #616161;
+  padding: 60px 10px;
+}
 
 html {
   position: relative;
@@ -162,7 +91,11 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 60px;
 }
+
 .footer {
   position: absolute;
   bottom: 0;
@@ -173,16 +106,15 @@ body {
 
 .modal-dialog,
 .modal-content {
-    /* 100% of window height */
-    height: 95%;
-    width: 95%;
-    margin: 5;
-    padding: 5;
+  /* 100% of window height */
+  height: 95%;
+  width: 95%;
+  margin: 5;
+  padding: 5;
 }
 
 .modal-body {
-    /* 100% = dialog height, 120px = header + footer */
-    overflow-y: scroll;
-    overflow-x: scroll;
+  /* 100% = dialog height, 120px = header + footer */
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
-
