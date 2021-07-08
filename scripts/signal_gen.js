@@ -1,15 +1,21 @@
+// Set the width and height of the graphs
+var graph_width = 800;
+var graph_height = 400;
+
 function draw(data, freq) {
   var svg = d3.select("svg"),
     margin = {top: 10, right: 30, bottom: 50, left: 60},
-    width = 800 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    width = graph_width - margin.left - margin.right,
+    height = graph_height - margin.top - margin.bottom;
 
+  // Set up the axis
   var x = d3.scaleLinear().range([0, width]),
     y = d3.scaleLinear().range([height, 0]);
 
   var xAxis = d3.axisBottom(x),
     yAxis = d3.axisLeft(y);
 
+  // x axis label
   svg.append("text")             
     .attr("transform",
         "translate(" + (width/2) + " ," + 
@@ -17,6 +23,7 @@ function draw(data, freq) {
     .style("text-anchor", "middle")
     .text("Time (s)");
 
+  // y axis label
   svg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin.left+55)
@@ -34,7 +41,7 @@ function draw(data, freq) {
     ])
     .on("brush end", brushed);
 
-    
+  // The line for the focus (big chart)
   var line = d3
     .line()
     .x(function (d) {
@@ -44,6 +51,7 @@ function draw(data, freq) {
       return y(d.amplitude);
     });
 
+  // Clip path for the brush
   var clip = svg
     .append("defs")
     .append("svg:clipPath")
@@ -54,17 +62,20 @@ function draw(data, freq) {
     .attr("x", 0)
     .attr("y", 0);
 
+  // Append the clip path
   var Line_chart = svg
     .append("g")
     .attr("class", "focus")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
     .attr("clip-path", "url(#clip)");
 
+  // set up the focus
   var focus = svg
     .append("g")
     .attr("class", "focus")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+  // Set the domain for the focus
   x.domain(
     d3.extent(data, function (d) {
       return d.time;
@@ -74,6 +85,7 @@ function draw(data, freq) {
     [-10*max_signal, 10*max_signal]
   );
 
+  // Call the axis
   focus
     .append("g")
     .attr("class", "axis axis--x")
@@ -82,12 +94,14 @@ function draw(data, freq) {
 
   focus.append("g").attr("class", "axis axis--y").call(yAxis);
 
+  // Call the brush
   focus
     .append("g")
     .attr("class", "brush")
     .call(brush)
     .call(brush.move, x.range());
 
+  // Append the line
   Line_chart.append("path").datum(data).attr("class", "line").attr("d", line);
 
   // Event listeners to move the brush
@@ -104,16 +118,18 @@ function draw(data, freq) {
     min: x.domain()[0],
   });
 
+  // Move the brush based on text input for window start/stop
   function moveBrush() {
     var start = d3.select("#window_start").property("value");
     var end = d3.select("#window_end").property("value");
 
+    // Make sure the start and end times are numbers
     var valid = isNumber(start) && isNumber(end);
     if (valid) {
       start = parseFloat(start);
       end = parseFloat(end);
     }
-
+    // Input validation
     var msg;
     if (!valid) {
       msg = `Error: ${
@@ -146,11 +162,13 @@ function draw(data, freq) {
     }
   }
 
+  // Handler for when the brush moves
   function brushed() {
     var extent = d3.event.selection;
     output(extent);
   }
 
+  // Extract the data and output the results of the FFT
   function output(extent) {
     if (extent) {
       // Hide the alert if it is a valid window size
@@ -176,8 +194,7 @@ function draw(data, freq) {
       document.getElementById("window_start").value = time_range[0].toFixed(3);
       document.getElementById("window_end").value = time_range[1].toFixed(3);
 
-
-      // Do the FFT
+      // Calculate and plot the FFT
       doFFT(windowData, freq);
 
     } else {
@@ -225,17 +242,15 @@ function doFFT(data, Fs){
   //TODO: Don't hard code this in.. Get the HTML
   $("#fft_div").html("<div id = 'fft_plot'></div>");
 
-  // Exclude the first 5 points
-  drawFFT(fftData.slice(15));
-  //drawFFT(fftData);
-
+  drawFFT(fftData);
 }
 
+// Function to draw the FFT from the generated signal
 function drawFFT(data_fft){
   // set the dimensions and margins of the graph
   var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
-  width_fft = 800 - margin_fft.left - margin_fft.right,
-  height_fft = 400 - margin_fft.top - margin_fft.bottom;
+  width_fft = graph_width - margin_fft.left - margin_fft.right,
+  height_fft = graph_height - margin_fft.top - margin_fft.bottom;
 
   // append the svg object to the body of the page
   var svg_fft = d3.select("#fft_plot")
@@ -246,7 +261,7 @@ function drawFFT(data_fft){
   .attr("transform",
         "translate(" + margin_fft.left + "," + margin_fft.top + ")");
 
-  // Add X axis --> it is a date format
+  // Add X axis
   var x_fft = d3.scaleLinear()
     .domain(d3.extent(data_fft, function(d) { return d.frequency; }))
     .range([ 0, width_fft ]);
@@ -261,6 +276,7 @@ function drawFFT(data_fft){
   svg_fft.append("g")
     .call(d3.axisLeft(y_fft));
 
+  // fft x-axis label
   svg_fft.append("text")             
     .attr("transform",
         "translate(" + (width_fft/2) + " ," + 
@@ -268,6 +284,7 @@ function drawFFT(data_fft){
     .style("text-anchor", "middle")
     .text("Frequency (Hz)");
 
+  // fft y-axis label
   svg_fft.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - margin_fft.left)
@@ -288,51 +305,11 @@ function drawFFT(data_fft){
       )
 }
 
-function getChannelData(channel, data, freq) {
-  let d = data.map((a) => a[channel]).map(Number);
-  let result = [];
-  let t = 0;
-  for (let i = 0; i < d.length; i++) {
-    result.push({
-      amplitude: d[i],
-      time: t,
-    });
-    t += 1 / freq;
-  }
-  return result;
-}
-
-function getEEGData(channelNames, data, freq) {
-  let d = [];
-  for (let i = 0; i < channelNames.length; i++) {
-    let channelData = getChannelData(channelNames[i], data, freq);
-    //console.log(channelNames[i]);
-    //console.log(channelData);
-    d.push({ channel: channelNames[i], value: channelData });
-  }
-  return d;
-}
-
-function updateDropdown(channelNames) {
-  var i = 0;
-  d3.select("#dropdown")
-    .selectAll("myOptions")
-    .data(channelNames)
-    .enter()
-    .append("option")
-    .text(function (d) {
-      return d;
-    }) // text showed in the menu
-    .attr("value", function () {
-      return i++;
-    }); // corresponding value
-}
-
+// Helper functions for extracting data from the moving window
 function isNumber(num) {
   var reg = /^-?\d+\.?\d*$/;
   return reg.test(num);
 }
-
 function findClosestIdx(val, arr) {
   var closest = arr.reduce(function (prev, curr) {
     return Math.abs(curr - val) < Math.abs(prev - val) ? curr : prev;
@@ -343,42 +320,7 @@ function findClosestIdx(val, arr) {
   return idx;
 }
 
-/**
- * Use this function to draw a raw plot from a local .csv file.
- * @param {string} file - the .csv file you wish to read in
- * @param {number} freq - the sampling frequency of the data
- */
-function drawRawFromFile(file, freq) {
-  d3.csv(file, function (error, data) {
-    if (error) throw error;
-    // Parse out channel names
-    var channelNames = d3.keys(data[0]);
-
-    // Update the dropdown with the channel names
-    updateDropdown(channelNames);
-
-    // Get the EEG Data from the .csv file
-    var allData = getEEGData(channelNames, data, freq);
-
-    // Plot the first channel's data
-    draw(allData[0].value, freq);
-    $("#title").html(allData[0].channel);
-
-    // Dropdown change behavior
-    d3.select("#dropdown").on("change", function (d) {
-      // recover the option that has been chosen
-      var selectedOption = d3.select(this).property("value");
-      $("#title").html(allData[selectedOption].channel);
-
-      // Remove and then redraw the plot
-      d3.select("svg").remove();
-      //TODO: Don't hard code this in.. Get the HTML
-      document.getElementById("plot").innerHTML = "<svg width='800' height='400'></svg>";
-      draw(allData[selectedOption].value, freq);
-    });
-  });
-}
-
+// Convert raw signal into data that D3 can process
 function convertToD3Data(d, freq) {
   let result = [];
   for (let i = 0; i < d.length; i++) {
@@ -390,7 +332,7 @@ function convertToD3Data(d, freq) {
   return result;
 }
 
-
+// Function to plot the generated signal and the FFT
 function drawWave(){
   let sampleRate = parseInt($("#sampleRateInput").val());
   let duration = parseInt($("#signalDurationInput").val());
@@ -402,14 +344,17 @@ function drawWave(){
   var gen = convertToD3Data(signal, sampleRate);
   d3.select("svg").remove();
   //TODO: Don't hard code this in.. Get the HTML
-  document.getElementById("plot").innerHTML = "<svg width='800' height='400'></svg>";
+  document.getElementById("plot").innerHTML = `<svg width='${graph_width}' height='${graph_height}'></svg>`;
 
   draw(gen, sampleRate);
 }
 
+// Variables needed for adding signals
 var regex = /^(.+?)(\d+)$/i;
 var cloneIndex = $(".clonedInput").length+1;
-var max_signal = 5;
+var max_signal = 5;  // The max number of signals that can be added
+
+// Function to add a new signal by cloning the first one
 function clone(){
     $("#clonedInput1").clone()
         .appendTo("#signal_gen")
@@ -442,6 +387,7 @@ function clone(){
             if(this.id.includes("removeButton")){
               $(this).show();
             }
+            // Regex to change the ids
             var id = this.id || "";
             var match = id.match(regex) || [];
             if (match.length == 3) {
@@ -451,20 +397,26 @@ function clone(){
         .on('click', 'button.remove', remove)
     cloneIndex++;
 }
+
+// Function to remove the signal
 function remove(){
     if($(this).attr('id') === "removeButton1") return;
     $(this).parents(".clonedInput").remove();
     drawWave();
 }
+
+// Event handlers for add signal and remove
 $("button.clone").on("click", add_signal);
 $("button.remove").on("click", remove);
 
+// Function to add a new signal
 function add_signal(){
   if($(".clonedInput").length == max_signal) return;
   clone();
   drawWave();
 }
 
+// Input validation for advanced options
 $('#advanced_options').on('change', 'input.signal_control', function() {
   if(parseInt($(this).val()) > parseInt($(this).attr('max'))){
     $("#signal_gen_alert").show();
@@ -479,6 +431,7 @@ $('#advanced_options').on('change', 'input.signal_control', function() {
   }
 });
 
+// Logic for toggling advanced options (reset the max freq)
 function toggle_advanced(){
   if($('#adv_opt_check').is(":checked")){
     $('#advanced_options').show(); 
