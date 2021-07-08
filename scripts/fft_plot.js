@@ -1,8 +1,6 @@
 // Set the height and width for the graphs
 var graph_width = 900;
 var graph_height = 550;
-// Store the data in a global variable
-var allData=[];
 
 // Draw the graphs
 function draw(d, freq) {
@@ -253,27 +251,9 @@ function draw(d, freq) {
       // Slice out the original data based on the window selection
       var windowData = aData.slice(lower, upper + 1);
 
-      // Output the length/range of the window
-      document.getElementById("window_len").innerText = `Window length: ${(time_range[1] - time_range[0]).toFixed(3)} seconds`;
-      document.getElementById("window_range").innerText = `Window range: ${time_range[0].toFixed(3)} sec to ${time_range[1].toFixed(3)} sec`;
-
       // Update the time range input boxes (if brush is dragged)
       document.getElementById("window_start").value = time_range[0].toFixed(3);
       document.getElementById("window_end").value = time_range[1].toFixed(3);
-
-      // TODO: Add code for calculation FFTs, Bandpower, Visualizations, etc using the windowData...
-      let bandpower = bci.bandpower(windowData, freq, [
-        "delta",
-        "theta",
-        "alpha",
-        "beta",
-        "gamma",
-      ]);
-      document.getElementById("delta_bp").innerText = `Delta Bandpower: ${bandpower[0].toFixed(3)}`;
-      document.getElementById("theta_bp").innerText = `Theta Bandpower: ${bandpower[1].toFixed(3)}`;
-      document.getElementById("alpha_bp").innerText = `Alpha Bandpower: ${bandpower[2].toFixed(3)}`;
-      document.getElementById("beta_bp").innerText = `Beta Bandpower: ${bandpower[3].toFixed(3)}`;
-      document.getElementById("gamma_bp").innerText = `Gamma Bandpower: ${bandpower[4].toFixed(3)}`;
 
       // Calculate and plot the FFT
       doFFT(windowData, freq);
@@ -495,6 +475,9 @@ function disp_filename(){
     reader.readAsText(file);
   }
 }
+
+// Store the data in a global variable
+var allData=[];
 
 // Process the data and show the graphs
 function loadFile() {  
