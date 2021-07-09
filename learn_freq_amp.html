@@ -25,6 +25,7 @@
         padding-left: 10px;
         padding-right: 10px;
         padding-top: 60px;
+        background-color: #82eefd;
       }
       footer {
         bottom: 0;
@@ -53,6 +54,25 @@
 
       .round {
         border-radius: 50%;
+      }
+      * {
+        box-sizing: border-box;
+      }
+
+      /* Create two equal columns that floats next to each other */
+      .column {
+        margin-left: 0;
+        float: left;
+        width: 50%;
+        padding: 10px;
+        height: 300px; /* Should be removed. Only for demonstration */
+      }
+
+      /* Clear floats after the columns */
+      .row:after {
+        content: "";
+        display: table;
+        clear: both;
       }
     </style>
   </head>
@@ -119,17 +139,29 @@
     </nav>
 
     <h1>What Do We Mean When We Say Frequency and Amplitude?</h1>
-    <h2>Frequency</h2>
-    <p>
-      The rate at which a vibration occurs that constitutes a wave. It can be
-      measured as the <b>wavelength</b> or the distance between each peak in the
-      signal. Usually measured per second in Hertz(HZ). Frequency is also used
-      to discover the pitch of a sound. A low pitch corresponds to a low
-      frequency wave and a high frequency wave to a high pitch.
-    </p>
-    <a href="images/IMG_2766.jpeg">
-      <img src="images/IMG_2766.jpeg" alt="Low Frequency Wave" />
-    </a>
+
+    <div class="row">
+      <div class="column" style="background-color: #0492c2">
+        <h2 style="margin-left: 20px">Frequency</h2>
+        <p style="margin-left: 20px">
+          The rate at which a vibration occurs that constitutes a wave. It can
+          be measured as the <b>wavelength</b> or the distance between each peak
+          in the signal. Usually measured per second in Hertz(HZ). Frequency is
+          also used to discover the pitch of a sound. A low pitch corresponds to
+          a low frequency wave and a high frequency wave to a high pitch.
+        </p>
+      </div>
+      <div class="column" style="background-color: #1520a6">
+        <a href="images/IMG_2766.jpeg">
+          <img
+            style="height: 260px"
+            src="images/IMG_2766.jpeg"
+            alt="Low Frequency Wave"
+          />
+        </a>
+      </div>
+    </div>
+
     <h2>What is the Difference Between High and Low Frequency</h2>
     <p>
       The measurement of frequency is in Hz. The higher the Hz the higher the
@@ -144,21 +176,31 @@
         alt="Low, Medium, and High Frequency Wave."
       />
     </a>
-    <h2>Wavelength</h2>
-    <a href="images/IMG_2775.jpeg">
-      <img
-        src="images/IMG_2775.jpeg"
-        alt="Low and High Frequency Wave with Wavelength."
-      />
-    </a>
 
-    <p>
-      A low frequency wave will also have a shorter wavelength than a high
-      frequency wave. In the first image you can see that with higher frequency
-      the amount of peaks increases shortening the wavelength in between each
-      peak. So a higher frequency signal will naturally have a short wavelength
-      and a low frequency signal will have a long wavelength.
-    </p>
+    <div class="row">
+      <div class="column" style="background-color: #63c5da">
+        <h2 style="margin-left: 20px">Wavelength</h2>
+        <p style="margin-left: 20px">
+          A low frequency wave will also have a shorter wavelength than a high
+          frequency wave. In the first image you can see that with higher
+          frequency the amount of peaks increases shortening the wavelength in
+          between each peak. So a higher frequency signal will naturally have a
+          short wavelength and a low frequency signal will have a long
+          wavelength.
+        </p>
+      </div>
+      <div class="column" style="background-color: #3944bc">
+        <h2></h2>
+        <a href="images/IMG_2775.jpeg">
+          <img
+            style="height: 260px"
+            src="images/IMG_2775.jpeg"
+            alt="Low and High Frequency Wave with Wavelength."
+          />
+        </a>
+      </div>
+    </div>
+
     <hr />
     <h2>Amplitude</h2>
     <p>
@@ -231,12 +273,20 @@
       they cancel each other out. This forms the straight line that you see in
       the resultant that has no amplitude or an amplitdue equal to 0
     </p>
+    <button
+      onclick="topFunction()"
+      id="myBtn"
+      class="btn btn-primary"
+      title="Go to top"
+    >
+      Top
+    </button>
 
+    <a href="learn_freq_amp_tool.html" class="next">Playground &raquo;</a>
     <footer>
       <hr />
       <p>&copy; UA HTIL 2021</p>
     </footer>
-    <a href="learn_freq_amp_tool.html" class="next">Playground &raquo;</a>
   </body>
 
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -246,13 +296,5 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <!-- Bootstrap CSS -->
 
-  <button
-    onclick="topFunction()"
-    id="myBtn"
-    class="btn btn-primary"
-    title="Go to top"
-  >
-    Top
-  </button>
   <script src="scripts/learn_fft.js"></script>
 </html>
