@@ -28,7 +28,7 @@ For example:
 The following libraries and resources were used to develop this project
 - [d3.js](https://d3js.org/)
 - [bci.js](https://bci.js.org/)
-- [jquery.fft](https://github.com/hotstaff/jquery.fft)
+- [dsp.js](https://github.com/corbanbrook/dsp.js)
 - [PhET Wave on a String Simiulation](https://phet.colorado.edu/en/simulation/wave-on-a-string)
 
 ---
@@ -47,7 +47,7 @@ The following libraries and resources were used to develop this project
 - [x] Amplitude slider/input
 - [x] Frequency slider/input
 - [x] Verification of text input
-- [ ] Different kinds of waveforms (square, sawtooth, triangle, etc)
+- [x] Different kinds of waveforms (square, sawtooth, triangle, etc)
 #### Research Tool
 - [x] Add ability to upload .csv file
 - [x] Add field to set sampling frequency

@@ -207,32 +207,40 @@ function draw(data, freq) {
 
 } // End of draw()
 
+function isPowerOfTwo(n)
+{
+  if (n == 0)
+    return false;
+
+  return parseInt( (Math.ceil((Math.log(n) / Math.log(2))))) == parseInt( (Math.floor(((Math.log(n) / Math.log(2))))));
+}
 
 function doFFT(data, Fs){
-  // Set up arrays for real and imaginary components
-  var real = data;
-  var imaginary = new Array(real.length);
-  imaginary.fill(0);
 
-  // Calculate the fft
-  var fft = new FFT();
-  fft.calc(1, real, imaginary);
+  let signal = data;
+  let len = data.length;
+  // signal length for the FFT needs to be a power of 2
+  let fft_len = len;
+  if (!isPowerOfTwo(len)){
+    // Find the nearest power of two (rounded up)
+    let nearest_power = Math.ceil(Math.log2(len));
+    fft_len = Math.pow(2, nearest_power);
+    // 0 pad the signal so its length is a power of 2
+    let padding = fft_len - len;
+    for(let i=0; i<padding; i++){
+      signal.push(0);
+    }
+  }
 
-  // Calculate frequencies
-  let freq = fft.frequencies(real, imaginary, Fs);
+  // do a forward FFT on the signal
+  var fft = new FFT(fft_len, Fs);
+  fft.forward(signal);
 
-  // Calculate magnitudes, divide by N
-  let mag = fft.amplitude(real, imaginary);
-  mag = mag.map(x => x/data.length);
-  //mag = mag.map(x => 20*Math.log10(Math.abs(x)));
-
-  // Create the dataset for the d3 chart
   fftData = [];
-  for(let i=0; i<freq.length; i++){
+  for(let i=0; i<fft.spectrum.length; i++){
     let pt = {
-      frequency: freq[i],
-      magnitude: mag[i]
-      //magnitude: real[i]
+      frequency: i*Fs/2/fft.spectrum.length,
+      magnitude: fft.spectrum[i]
     }
     fftData.push(pt);
   }
@@ -340,13 +348,40 @@ function drawWave(){
   var amp = $('.amp_value').map((_,el) => el.value).get();
   var freq = $('.freq_value').map((_,el) => el.value).get();
 
-  let signal = bci.generateSignal(amp, freq, sampleRate, duration);
+  //let signal = bci.generateSignal(amp, freq, sampleRate, duration);
+  let type = getWaveformType($("#waveform_type").val());
+  let osc = new Oscillator(type, freq[0], amp[0], sampleRate*duration, sampleRate);
+  osc.generate();
+  for(let i=1; i<amp.length; i++){
+    let osc2 = new Oscillator(type, freq[i], amp[i], sampleRate*duration, sampleRate);
+    osc2.generate();
+    osc.addSignal(osc2.signal);
+  }
+  signal = osc.signal;
+
   var gen = convertToD3Data(signal, sampleRate);
   d3.select("svg").remove();
   //TODO: Don't hard code this in.. Get the HTML
   document.getElementById("plot").innerHTML = `<svg width='${graph_width}' height='${graph_height}'></svg>`;
 
   draw(gen, sampleRate);
+}
+
+function getWaveformType(wave){
+  let type=0;
+  if(wave==="sine"){
+    type=DSP.SINE;
+  }
+  else if(wave==="triangle"){
+    type=DSP.TRIANGLE;
+  }
+  else if(wave==="saw"){
+    type=DSP.SAW;
+  }
+  else{
+    type=DSP.SQUARE;
+  }
+  return type;
 }
 
 // Variables needed for adding signals
@@ -426,8 +461,13 @@ $('#advanced_options').on('change', 'input.signal_control', function() {
     $("#signal_gen_alert").show();
     $("#signal_gen_alert").text(`Current value ${$(this).val()} is below the minimum of ${$(this).attr('min')}`);
   }
+	else if(!isNumber($(this).val())){
+		$("#signal_gen_alert").show();
+    $("#signal_gen_alert").text(`Current value ${$(this).val()} is not a valid number`);
+	}
   else{
     $("#signal_gen_alert").hide();
+		drawWave();
   }
 });
 
@@ -446,10 +486,12 @@ function toggle_advanced(){
     $("#sampleRateInput").val(512);
     $("#sampleRateRange").val(512);
     $("#signalDurationInput").val(1);
+    $("#waveform_type").val("sine");
+    $("#signal_gen_alert").hide();
     drawWave();
   }
 }
-
+$('#adv_opt_check')[0].checked=false;
 drawWave();
 
 

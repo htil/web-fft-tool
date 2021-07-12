@@ -81,16 +81,28 @@
   <!-- Advanced options -->
   <div class="form-row" id="adv_opt_row">
     <div class="col-0"><label class="form-row" style="font-size: 20px;">Use Advanced Options:&nbsp</label></div>
-    <div class="col-0"><input id="adv_opt_check" type="checkbox" class="form-control" value="0" style="width: 30px; height: 30px;" onclick="toggle_advanced()"></div>
+    <div class="col-0"><input id="adv_opt_check" type="checkbox" class="form-control" style="width: 30px; height: 30px;" onclick="toggle_advanced()"></div>
     <div class="col-0">
-      <div class="form-row" id="advanced_options" style="display:none;">
-        <div class="col-0"><label id="samplingRate" style="font-size: 20px">Sample Rate: </label></div>
-        <div class="col-2"><input type=range id="sampleRateRange" class="form-control signal_control" value="512" min="256" max="1024" onchange="$('#sampleRateInput').val(this.value); drawWave();"></div>
-        <div class="col-2"><input type="number" id="sampleRateInput" class="form-control signal_control" min="256" max="1024" value="512" onchange="$('#sampleRateRange').val(this.value); drawWave();" /></div>
-        <div class="col-0"><label id="signalDuration" style="font-size: 20px">&nbsp&nbsp&nbsp Signal Duration:</label></div>
-        <div class="col-2"><input type="number" id="signalDurationInput" class="form-control signal_control" min="1" max="10" value="1" onchange="$('#signalDurationRange').val(this.value); drawWave();" /></div>
-        <div class="col-0"></div>
-        <div class="alert alert-danger" role="alert" id="signal_gen_alert" style="display:none;"></div>
+      <div id="advanced_options" style="display:none;">
+        <div class="form-row">
+          <div class="col-0"><label id="samplingRate" style="font-size: 20px">Sample Rate: </label></div>
+          <div class="col-2"><input type=range id="sampleRateRange" class="form-control signal_control" value="512" min="256" max="1024" onchange="$('#sampleRateInput').val(this.value);"></div>
+          <div class="col-2"><input type="number" id="sampleRateInput" class="form-control signal_control" min="256" max="1024" value="512" onchange="$('#sampleRateRange').val(this.value);" /></div>
+          <div class="col-0"><label id="signalDuration" style="font-size: 20px">&nbsp&nbsp&nbsp Signal Duration:</label></div>
+          <div class="col-2"><input type="number" id="signalDurationInput" class="form-control signal_control" min="1" max="10" value="1" onchange="$('#signalDurationRange').val(this.value);" /></div>
+          <div class="col-0"><label id="waveform" style="font-size: 20px">&nbsp&nbsp&nbsp Waveform Type:</label></div>
+          <div class="col-0">
+            <select class="form-control signal_control" id="waveform_type" onchange="drawWave();">
+              <option value="sine" selected>Sine</option>
+              <option value="triangle">Triangle</option>
+              <option value="saw">Saw</option>
+              <option value="square">Square</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row py-1">
+          <div class="col-0"><div class="alert alert-danger" role="alert" id="signal_gen_alert" style="display:none;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -140,7 +152,7 @@
 		<p>Powered by: 
 		  <a href="https://d3js.org/">d3.js</a>,
 		  <a href="https://bci.js.org/">bci.js</a>,
-		  <a href="https://github.com/hotstaff/jquery.fft">jquery.fft</a>
+		  <a href="https://github.com/corbanbrook/dsp.js">dsp.js</a>
 		</p>
 	  </div>
 	</div>
@@ -156,8 +168,10 @@
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <!-- bci.js -->
   <script src="https://cdn.jsdelivr.net/npm/bcijs@1.8.0/dist/bci.min.js"></script>
+  <!-- jquery.fft.js 
+  <script src="scripts/jquery.fft.js"></script>-->
   <!-- jquery.fft.js -->
-  <script src="scripts/jquery.fft.js"></script>
+  <script src="scripts/dsp.js"></script>
   <!-- Custom script -->
   <script src="scripts/signal_gen.js"></script>
 </body>
