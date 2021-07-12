@@ -333,6 +333,7 @@ function doFFT(data, Fs){
   drawFFT(fftData);
 }
 
+
 function drawFFT(data_fft){
   // set the dimensions and margins of the graph
   var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
@@ -353,7 +354,7 @@ function drawFFT(data_fft){
     .domain(d3.extent(data_fft, function(d) { return d.frequency; }))
     //.domain([0, 125])
     .range([ 0, width_fft ]);
-  svg_fft.append("g")
+  var xAxis_fft = svg_fft.append("g")
     .attr("transform", "translate(0," + height_fft + ")")
     .call(d3.axisBottom(x_fft));
 
@@ -361,7 +362,7 @@ function drawFFT(data_fft){
   var y_fft = d3.scaleLinear()
     .domain(d3.extent(data_fft, function(d) { return d.magnitude; }))
     .range([ height_fft, 0 ]);
-  svg_fft.append("g")
+  var yAxis_fft=svg_fft.append("g")
     .call(d3.axisLeft(y_fft));
 
   // Add x axis label
@@ -381,17 +382,87 @@ function drawFFT(data_fft){
     .style("text-anchor", "middle")
     .text("Magnitude");   
 
+
+  //// Add a clipPath: everything out of this area won't be drawn.
+  var fft_clip = svg_fft.append("defs").append("svg:clipPath")
+    .attr("id", "clip_fft")
+    .append("svg:rect")
+    .attr("width", width_fft )
+    .attr("height", height_fft )
+    .attr("x", 0)
+    .attr("y", 0);
+
+  // Add brushing
+  var brush_fft = d3.brushX()                  
+  .extent( [ [0,0], [width_fft,height_fft] ] ) 
+  .on("end", updateChart)         
+
+  // Create the line variable: where both the line and the brush take place
+  var line_fft = svg_fft.append('g')
+  .attr("clip-path", "url(#clip_fft)")
+
   // Add the line
-  svg_fft.append("path")
-    .datum(data_fft)
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 1.5)
-    .attr("d", d3.line()
+  line_fft.append("path")
+  .datum(data_fft)
+  .attr("class", "line")  // I add the class line to be able to modify this line later on.
+  .attr("fill", "none")
+  .attr("stroke", "steelblue")
+  .attr("stroke-width", 1.5)
+  .attr("d", d3.line()
+  .x(function(d) { return x_fft(d.frequency) })
+  .y(function(d) { return y_fft(d.magnitude) })
+  )
+  line_fft
+  .append("g")
+    .attr("class", "brush")
+    .call(brush_fft);
+
+  // A function that set idleTimeOut to null
+  var idleTimeout
+  function idled() { idleTimeout = null; }
+
+  // A function that update the chart for given boundaries
+  function updateChart() {
+
+    // What are the selected boundaries?
+    extent = d3.event.selection
+
+    // If no selection, back to initial coordinate. Otherwise, update X axis domain
+    if(!extent){
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+      x_fft.domain([ 4,8])
+    }else{
+      x_fft.domain([ x_fft.invert(extent[0]), x_fft.invert(extent[1]) ])
+      line_fft.select(".brush").call(brush_fft.move, null)
+    }
+
+    // Update axis and line position
+    xAxis_fft.transition().duration(1000).call(d3.axisBottom(x_fft))
+    line_fft
+      .select('.line')
+      .transition()
+      .duration(1000)
+      .attr("d", d3.line()
       .x(function(d) { return x_fft(d.frequency) })
       .y(function(d) { return y_fft(d.magnitude) })
       )
+  
+  }
+
+  // Reset on double click
+  svg_fft.on("dblclick",function(){
+    x_fft.domain(d3.extent(data_fft, function(d) { return d.frequency; }))
+    xAxis_fft.transition().call(d3.axisBottom(x_fft))
+    line_fft
+      .select('.line')
+      .transition()
+      .attr("d", d3.line()
+        .x(function(d) { return x_fft(d.frequency) })
+        .y(function(d) { return y_fft(d.magnitude) })
+    )
+  });
 }
+
 
 // Extract data from each column, add the appropriate time data
 function getColumnData(channel, data, freq, time_exists, time) {
