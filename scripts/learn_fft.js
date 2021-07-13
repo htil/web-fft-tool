@@ -20,3 +20,31 @@ function topFunction() {
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
+var submitAnswer = function() {
+  if ( $("#2b_Short").is(":checked")){
+    $("#2b_Correct").show();
+    $("#2b_Incorrect").hide();
+  }else{
+    $("#2b_Incorrect").show();
+    $("#2b_Correct").hide();
+  }
+  
+  
+  /*
+  var radios = document.getElementsByName('choice');
+  var val= "";
+  for (var i = 0, length = radios.length; i < length; i++) {
+      if (radios[i].checked) {
+         val = radios[i].value; 
+         break;
+       }
+  }
+  
+  if (val == "" ) {
+    alert('please select choice answer');
+  } else if ( val == "Shorter length" ) {
+    alert('Answer is correct !');
+  } else {
+    alert('Answer is wrong');
+  }*/
+};

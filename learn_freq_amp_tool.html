@@ -154,6 +154,7 @@
         >Question 1:What do you notice about the motion of the beads and the
         waves that they create?</label
       >
+      <br />
       <textarea
         id="w3review"
         name="w3review"
@@ -168,6 +169,7 @@
       <label for="w3review"
         >Question 2: What is different about the motion of the beads?
       </label>
+      <br />
       <textarea
         id="w3review"
         name="w3review"
@@ -182,9 +184,28 @@
       </h4>
       <!--Answer:Shorter-->
       <form action="" method="post">
-        <input type="radio" name="wave" value="length" /> Longer Wavelength
-        <input type="radio" name="wave" value="length" /> Shorter Wavelength
+        <input type="radio" id="2b_Long" name="wave" value="Longer length" />
+        Longer Wavelength
+        <input type="radio" id="2b_Short" name="wave" value="Shorter length" />
+        Shorter Wavelength
       </form>
+      <div
+        style="display: none"
+        id="2b_Incorrect"
+        class="alert alert-danger"
+        role="alert"
+      >
+        Incorrect answer. The correct answer is "Shorter Length"
+      </div>
+      <div
+        style="display: none"
+        id="2b_Correct"
+        class="alert alert-success"
+        role="alert"
+      >
+        Correct!
+      </div>
+
       <br /><br />
       <h4 style="font-weight: normal">
         Question 2c: Are the beads moving faster or slower with an increased
@@ -201,6 +222,7 @@
       <label for="w3review"
         >Question 3: What do you notice about the motion of the beads?
       </label>
+      <br />
       <textarea
         id="w3review"
         name="w3review"
@@ -230,6 +252,7 @@
       <label for="w3review"
         >Question 4: Did this change the motion of the beads? If so, what?
       </label>
+      <br />
       <textarea
         id="w3review"
         name="w3review"
@@ -252,6 +275,7 @@
       <label for="w3review"
         >Question 4c: Where do the beads reach their highest point?(cm)
       </label>
+      <br />
       <textarea
         id="w3review"
         name="w3review"
@@ -271,7 +295,7 @@
       </form>
       <br /><br />
 
-      <input type="submit" value="Submit" />
+      <button onclick="submitAnswer()">Submit</button>
     </form>
 
     <p>
