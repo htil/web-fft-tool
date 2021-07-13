@@ -285,40 +285,54 @@ function draw(d, freq) {
 
 } // End of draw()
 
+function isPowerOfTwo(n)
+{
+  if (n == 0)
+    return false;
+
+  return parseInt( (Math.ceil((Math.log(n) / Math.log(2))))) == parseInt( (Math.floor(((Math.log(n) / Math.log(2))))));
+}
+
 function doFFT(data, Fs){
-  // Set up arrays for real and imaginary components
-  var real = data;
-  var imaginary = new Array(real.length);
-  imaginary.fill(0);
+  let signal = data;
 
-  // Calculate the fft
-  var fft = new FFT();
-  fft.calc(1, real, imaginary);
-
-  // Calculate frequencies
-  let freq = fft.frequencies(real, imaginary, Fs);
-
-  // Calculate magnitudes, divide by N
-  let mag = fft.amplitude(real, imaginary);
-  mag = mag.map(x => x/data.length);
+  let len = data.length;
+  // signal length for the FFT needs to be a power of 2
+  let fft_len = len;
+  if (!isPowerOfTwo(len)){
+    // Find the nearest power of two (rounded up)
+    let nearest_power = Math.ceil(Math.log2(len));
+    fft_len = Math.pow(2, nearest_power);
+    // 0 pad the signal so its length is a power of 2
+    let padding = fft_len - len;
+    for(let i=0; i<padding; i++){
+      signal.push(0);
+    }
+  }
+  
+  // do a forward FFT on the signal
+  var fft = new FFT(fft_len, Fs);
+  fft.forward(signal);
+	let mag = fft.spectrum;
 
   // Create the dataset for the d3 chart
   fftData = [];
-  for(let i=0; i<freq.length; i++){
+  for(let i=0; i<fft.spectrum.length; i++){
     let pt = {
-      frequency: freq[i],
+      frequency: i*Fs/2/fft.spectrum.length,
       magnitude: mag[i]
-      //magnitude: real[i]
     }
     fftData.push(pt);
   }
 
   // Remove and then redraw the plot
   d3.select("#fft_plot").remove();
-  $("#fft_div").html("<div id='fft_plot'></div>");
+  //TODO: Don't hard code this in.. Get the HTML
+  $("#fft_div").html("<div id = 'fft_plot'></div>");
 
   drawFFT(fftData);
 }
+
 
 function drawFFT(data_fft){
   // set the dimensions and margins of the graph
@@ -338,8 +352,9 @@ function drawFFT(data_fft){
   // Add X axis --> it is a date format
   var x_fft = d3.scaleLinear()
     .domain(d3.extent(data_fft, function(d) { return d.frequency; }))
+    //.domain([0, 125])
     .range([ 0, width_fft ]);
-  svg_fft.append("g")
+  var xAxis_fft = svg_fft.append("g")
     .attr("transform", "translate(0," + height_fft + ")")
     .call(d3.axisBottom(x_fft));
 
@@ -347,7 +362,7 @@ function drawFFT(data_fft){
   var y_fft = d3.scaleLinear()
     .domain(d3.extent(data_fft, function(d) { return d.magnitude; }))
     .range([ height_fft, 0 ]);
-  svg_fft.append("g")
+  var yAxis_fft=svg_fft.append("g")
     .call(d3.axisLeft(y_fft));
 
   // Add x axis label
@@ -367,17 +382,87 @@ function drawFFT(data_fft){
     .style("text-anchor", "middle")
     .text("Magnitude");   
 
+
+  //// Add a clipPath: everything out of this area won't be drawn.
+  var fft_clip = svg_fft.append("defs").append("svg:clipPath")
+    .attr("id", "clip_fft")
+    .append("svg:rect")
+    .attr("width", width_fft )
+    .attr("height", height_fft )
+    .attr("x", 0)
+    .attr("y", 0);
+
+  // Add brushing
+  var brush_fft = d3.brushX()                  
+  .extent( [ [0,0], [width_fft,height_fft] ] ) 
+  .on("end", updateChart)         
+
+  // Create the line variable: where both the line and the brush take place
+  var line_fft = svg_fft.append('g')
+  .attr("clip-path", "url(#clip_fft)")
+
   // Add the line
-  svg_fft.append("path")
-    .datum(data_fft)
-    .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-width", 1.5)
-    .attr("d", d3.line()
+  line_fft.append("path")
+  .datum(data_fft)
+  .attr("class", "line")  // I add the class line to be able to modify this line later on.
+  .attr("fill", "none")
+  .attr("stroke", "steelblue")
+  .attr("stroke-width", 1.5)
+  .attr("d", d3.line()
+  .x(function(d) { return x_fft(d.frequency) })
+  .y(function(d) { return y_fft(d.magnitude) })
+  )
+  line_fft
+  .append("g")
+    .attr("class", "brush")
+    .call(brush_fft);
+
+  // A function that set idleTimeOut to null
+  var idleTimeout
+  function idled() { idleTimeout = null; }
+
+  // A function that update the chart for given boundaries
+  function updateChart() {
+
+    // What are the selected boundaries?
+    extent = d3.event.selection
+
+    // If no selection, back to initial coordinate. Otherwise, update X axis domain
+    if(!extent){
+      if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+      x_fft.domain([ 4,8])
+    }else{
+      x_fft.domain([ x_fft.invert(extent[0]), x_fft.invert(extent[1]) ])
+      line_fft.select(".brush").call(brush_fft.move, null)
+    }
+
+    // Update axis and line position
+    xAxis_fft.transition().duration(1000).call(d3.axisBottom(x_fft))
+    line_fft
+      .select('.line')
+      .transition()
+      .duration(1000)
+      .attr("d", d3.line()
       .x(function(d) { return x_fft(d.frequency) })
       .y(function(d) { return y_fft(d.magnitude) })
       )
+  
+  }
+
+  // Reset on double click
+  svg_fft.on("dblclick",function(){
+    x_fft.domain(d3.extent(data_fft, function(d) { return d.frequency; }))
+    xAxis_fft.transition().call(d3.axisBottom(x_fft))
+    line_fft
+      .select('.line')
+      .transition()
+      .attr("d", d3.line()
+        .x(function(d) { return x_fft(d.frequency) })
+        .y(function(d) { return y_fft(d.magnitude) })
+    )
+  });
 }
+
 
 // Extract data from each column, add the appropriate time data
 function getColumnData(channel, data, freq, time_exists, time) {
@@ -455,7 +540,7 @@ function disp_filename(){
     $("#invalid_f").hide();
     $("#finput_txt").html("Uploaded file: <i class='fas fa-file-csv'></i>&nbsp"+fileName);
     $("#after_file").show();
-    $("#modal_title").html(`${fileName} (displaying first 1000 lines)`);
+    $("#modal_title").html(`${fileName} (displaying first 250 lines)`);
   }
   else{
     $("#invalid_f").text(`Error: ${fileExtension} is not a supported file type. Please upload a .csv file.`);
@@ -482,8 +567,10 @@ var allData=[];
 // Process the data and show the graphs
 function loadFile() {  
   // Get the sampling frequency from the input box
-  let freq = parseInt($("#sampling_freqency").val());
-  if((freq < 128)){
+	let val = $("#sampling_freqency").val();
+	var freq=0;
+	if(isNumber(val)) freq = parseInt(val);
+  if(!isNumber(val) || (freq < 128)){
     alert("Invalid or empty sampling frequency! Please input a valid sampling frequency greater than 128.");
     return;
   }
