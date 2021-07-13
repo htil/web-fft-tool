@@ -184,9 +184,14 @@
       </h4>
       <!--Answer:Shorter-->
       <form action="" method="post">
-        <input type="radio" id="2b_Long" name="wave" value="Longer length" />
+        <input type="radio" id="2b" name="wave" value="Longer length" />
         Longer Wavelength
-        <input type="radio" id="2b_Short" name="wave" value="Shorter length" />
+        <input
+          type="radio"
+          id="2b_rightAnswer"
+          name="wave"
+          value="Shorter length"
+        />
         Shorter Wavelength
       </form>
       <div
@@ -213,9 +218,32 @@
       </h4>
       <!--Answer:Faster-->
       <form action="" method="post">
-        <input type="radio" name="frequency" value="speed" /> Faster
-        <input type="radio" name="frequency" value="speed" /> Slower
+        <input
+          type="radio"
+          id="2c_rightAnswer"
+          name="frequency"
+          value="speed"
+        />
+        Faster
+        <input type="radio" id="2c" name="frequency" value="speed" />
+        Slower
       </form>
+      <div
+        style="display: none"
+        id="2c_Incorrect"
+        class="alert alert-danger"
+        role="alert"
+      >
+        Incorrect answer. The correct answer is "Faster"
+      </div>
+      <div
+        style="display: none"
+        id="2c_Correct"
+        class="alert alert-success"
+        role="alert"
+      >
+        Correct!
+      </div>
       <br /><br />
       <h4>Q3 Step 1: Set the frequency to 1.00Hz</h4>
 
@@ -238,9 +266,29 @@
       </h4>
       <!--Answer:slower-->
       <form action="" method="post">
-        <input type="radio" name="wave" value="length" /> Faster
-        <input type="radio" name="wave" value="length" /> Slower
+        <input type="radio" id="3b" name="wave" value="length" />
+        Faster
+        <input type="radio" id="3b_rightAnswer" name="wave" value="length" />
+        Slower
       </form>
+
+      <div
+        style="display: none"
+        id="3b_Incorrect"
+        class="alert alert-danger"
+        role="alert"
+      >
+        Incorrect answer. The correct answer is "Slower"
+      </div>
+      <div
+        style="display: none"
+        id="3b_Correct"
+        class="alert alert-success"
+        role="alert"
+      >
+        Correct!
+      </div>
+
       <br /><br />
       <h4>
         Q4 Step 1: Now lets look at the amplitude, check the
@@ -265,11 +313,28 @@
       <h4 style="font-weight: normal">
         Question 4b: Did the change in amplitude affect the frequency?
       </h4>
-      <!--Answer:slower-->
+      <!--Answer:No-->
       <form action="" method="post">
-        <input type="radio" name="yes" value="Yes" />
-        Yes <input type="radio" name="no" value="no" /> No
+        <input type="radio" id="4b" name="yes" value="yes" />
+        Yes
+        <input type="radio" id="4b_rightAnswer" name="no" value="no" /> No
       </form>
+      <div
+        style="display: none"
+        id="4b_Incorrect"
+        class="alert alert-danger"
+        role="alert"
+      >
+        Incorrect answer. The correct answer is "No"
+      </div>
+      <div
+        style="display: none"
+        id="4b_Correct"
+        class="alert alert-success"
+        role="alert"
+      >
+        Correct!
+      </div>
       <br /><br />
 
       <label for="w3review"
@@ -286,13 +351,35 @@
       </textarea>
       <br /><br />
       <h4 style="font-weight: normal">
-        Question 4c: Are the beads higher or lower than before?
+        Question 4d: Are the beads higher or lower than before?
       </h4>
-      <!--Answer:slower-->
+      <!--Answer:Higher-->
       <form action="" method="post">
-        <input type="radio" name="Amplitude" value="Height" /> Higher
-        <input type="radio" name="Amplitude" value="Height" /> Lower
+        <input
+          type="radio"
+          id="4d_rightAnswer"
+          name="Amplitude"
+          value="Height"
+        />
+        Higher
+        <input type="radio" id="4d" name="Amplitude" value="Height" /> Lower
       </form>
+      <div
+        style="display: none"
+        id="4d_Incorrect"
+        class="alert alert-danger"
+        role="alert"
+      >
+        Incorrect answer. The correct answer is "Slower"
+      </div>
+      <div
+        style="display: none"
+        id="4d_Correct"
+        class="alert alert-success"
+        role="alert"
+      >
+        Correct!
+      </div>
       <br /><br />
 
       <button onclick="submitAnswer()">Submit</button>

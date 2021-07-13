@@ -20,14 +20,27 @@ function topFunction() {
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
-var submitAnswer = function() {
-  if ( $("#2b_Short").is(":checked")){
-    $("#2b_Correct").show();
-    $("#2b_Incorrect").hide();
-  }else{
-    $("#2b_Incorrect").show();
-    $("#2b_Correct").hide();
+function validate(question){
+  if ( $("#"+question+"_rightAnswer").is(":checked")){
+      $("#"+question+"_Correct").show();
+      $("#"+question+"_Incorrect").hide();
+      }
+     else if ( $("#"+question).is(":checked")){
+        $("#"+question+"_Correct").hide();
+        $("#"+question+"_Incorrect").show();
+        }
+      
   }
+var submitAnswer = function() {
+
+  
+    //Usage example
+    validate("2b");
+    validate("2c");
+    validate("3b");
+    validate("4b");
+    validate("4d");
+    
   
   
   /*
