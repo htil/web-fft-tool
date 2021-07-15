@@ -411,7 +411,7 @@ function convertToD3Data(d, freq) {
 
 // Function to plot the generated signal and the FFT
 function drawWave(){
-  let sampleRate = parseInt($("#sampleRateInput").val());
+  let sampleRate = parseFloat($("#sampleRateInput").val());
   let duration = parseInt($("#signalDurationInput").val());
 
   var amp = $('.amp_value').map((_,el) => el.value).get();

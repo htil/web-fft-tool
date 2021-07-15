@@ -293,6 +293,7 @@ function isPowerOfTwo(n)
   return parseInt( (Math.ceil((Math.log(n) / Math.log(2))))) == parseInt( (Math.floor(((Math.log(n) / Math.log(2))))));
 }
 
+
 function doFFT(data, Fs){
   let signal = data;
 
@@ -317,7 +318,7 @@ function doFFT(data, Fs){
 
   // Create the dataset for the d3 chart
   fftData = [];
-  for(let i=0; i<fft.spectrum.length; i++){
+  for(let i=0; i<fft.spectrum.length-1; i++){
     let pt = {
       frequency: i*Fs/2/fft.spectrum.length,
       magnitude: mag[i]
@@ -333,7 +334,42 @@ function doFFT(data, Fs){
   drawFFT(fftData);
 }
 
+/* // jquery.fft.js implementation
+function doFFT(data, Fs){
+  // Set up arrays for real and imaginary components
+  var real = data;
+  var imaginary = new Array(real.length);
+  imaginary.fill(0);
 
+  // Calculate the fft
+  var fft = new FFT();
+  fft.calc(1, real, imaginary);
+
+  // Calculate frequencies
+  let freq = fft.frequencies(real, imaginary, Fs);
+
+  // Calculate magnitudes, divide by N
+  let mag = fft.amplitude(real, imaginary);
+  mag = mag.map(x => x/data.length);
+
+  // Create the dataset for the d3 chart
+  fftData = [];
+  for(let i=0; i<freq.length; i++){
+    let pt = {
+      frequency: freq[i],
+      magnitude: mag[i]
+      //magnitude: real[i]
+    }
+    fftData.push(pt);
+  }
+
+  // Remove and then redraw the plot
+  d3.select("#fft_plot").remove();
+  $("#fft_div").html("<div id='fft_plot'></div>");
+
+  drawFFT(fftData);
+}
+*/
 function drawFFT(data_fft){
   // set the dimensions and margins of the graph
   var margin_fft = {top: 10, right: 30, bottom: 50, left: 60},
@@ -569,9 +605,9 @@ function loadFile() {
   // Get the sampling frequency from the input box
 	let val = $("#sampling_freqency").val();
 	var freq=0;
-	if(isNumber(val)) freq = parseInt(val);
-  if(!isNumber(val) || (freq < 128)){
-    alert("Invalid or empty sampling frequency! Please input a valid sampling frequency greater than 128.");
+	if(isNumber(val)) freq = parseFloat(val);
+  if(!isNumber(val) || (freq < 1)){
+    alert("Invalid or empty sampling frequency! Please input a valid sampling frequency greater than 0.");
     return;
   }
 
@@ -635,7 +671,7 @@ function updateModal(){
 
 // Dropdown change behavior
 $("#dropdown").on("change", function (d) {
-    var freq = parseInt($("#sampling_freqency").val());
+    var freq = parseFloat($("#sampling_freqency").val());
     console.log(freq);
     // recover the option that has been chosen
     var selectedOption = d3.select("#dropdown").property("value");
