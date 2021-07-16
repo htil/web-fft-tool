@@ -51,10 +51,11 @@ The following libraries and resources were used to develop this project
 #### Research Tool
 - [x] Add ability to upload .csv file
 - [x] Add field to set sampling frequency
-- [x]  Add feature to view data from file
-- [x]  Add ability to use time data from file
+- [x] Add feature to view data from file
+- [x] Add ability to use time data from file
 - [ ] Make FFT graph interactive
-  - [ ]  Display frequency/amplitude on mouseover
+  - [x] Allow user to click and drag to zoom   
+  - [ ] Display frequency/amplitude on mouseover
 
 ---
 
