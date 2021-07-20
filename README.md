@@ -29,33 +29,7 @@ The following libraries and resources were used to develop this project
 - [d3.js](https://d3js.org/)
 - [bci.js](https://bci.js.org/)
 - [dsp.js](https://github.com/corbanbrook/dsp.js)
-- [PhET Wave on a String Simiulation](https://phet.colorado.edu/en/simulation/wave-on-a-string)
-
----
-
-### To-do List
-#### General
-- [x] Raw Plot
-- [x] Add sliding window
-- [x] Extract raw data from sliding window
-- [x] Calculate FFT from window
-- [x] Output and graph result of FFT
-- [x] Add citations for simulations and libraries
-- [ ] Come up with a cooler name for the repo :sunglasses:
-#### Educational tool
-- [x] Add ability to generate signal using bci.js
-- [x] Amplitude slider/input
-- [x] Frequency slider/input
-- [x] Verification of text input
-- [x] Different kinds of waveforms (square, sawtooth, triangle, etc)
-#### Research Tool
-- [x] Add ability to upload .csv file
-- [x] Add field to set sampling frequency
-- [x] Add feature to view data from file
-- [x] Add ability to use time data from file
-- [ ] Make FFT graph interactive
-  - [x] Allow user to click and drag to zoom   
-  - [ ] Display frequency/amplitude on mouseover
+- [PhET Wave on a String Simulation](https://phet.colorado.edu/en/simulation/wave-on-a-string)
 
 ---
 
